@@ -1,0 +1,35 @@
+services:
+
+  - type: web
+
+    name: ssmr-hostel
+
+    runtime: python
+
+    buildCommand: ./build.sh
+
+    startCommand: gunicorn hostel_management.wsgi:application
+
+    envVars:
+
+      - key: DJANGO_SECRET_KEY
+        sync: false
+
+      - key: DJANGO_DEBUG
+        value: "False"
+
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ssmr-hostel-db
+          property: connectionString
+
+
+databases:
+
+  - name: ssmr-hostel-db

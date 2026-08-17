@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Bed Report</title>
+
+    <style>
+
+        body{
+            font-family:Arial,sans-serif;
+            margin:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        table,th,td{
+            border:1px solid #000;
+        }
+
+        th,td{
+            padding:8px;
+            text-align:center;
+        }
+
+        th{
+            background:#f2f2f2;
+        }
+
+        h2{
+            text-align:center;
+        }
+
+    </style>
+
+</head>
+
+<body onload="window.print()">
+
+<h2>Bed Report</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Room</th>
+
+<th>Bed</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for bed in beds %}
+
+<tr>
+
+<td>{{ bed.room.room_number }}</td>
+
+<td>{{ bed.bed_number }}</td>
+
+<td>{{ bed.status }}</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="3">
+
+No Beds Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</body>
+
+</html>

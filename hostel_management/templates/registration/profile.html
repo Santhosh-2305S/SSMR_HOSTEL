@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>
+
+                <i class="bi bi-person-circle"></i>
+
+                User Profile
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <tr>
+
+                    <th width="30%">Username</th>
+
+                    <td>{{ request.user.username }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Email</th>
+
+                    <td>{{ request.user.email }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>First Name</th>
+
+                    <td>{{ request.user.first_name }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Last Name</th>
+
+                    <td>{{ request.user.last_name }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Last Login</th>
+
+                    <td>{{ request.user.last_login }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Status</th>
+
+                    <td>
+
+                        {% if request.user.is_active %}
+
+                        <span class="badge bg-success">
+
+                            Active
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-danger">
+
+                            Inactive
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Role</th>
+
+                    <td>
+
+                        {% if request.user.is_superuser %}
+
+                        <span class="badge bg-danger">
+
+                            Administrator
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-primary">
+
+                            Staff
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <hr>
+
+<a href="{% url 'change_password' %}"
+   class="btn btn-warning">
+
+    <i class="bi bi-key-fill"></i>
+
+    Change Password
+
+</a>
+
+    </div>
+
+</div>
+
+{% endblock %}

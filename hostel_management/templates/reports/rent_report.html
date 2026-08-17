@@ -1,0 +1,1034 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Rent Report Styling
+    ========================================== */
+
+    .report-card {
+
+        transition: transform 0.2s ease;
+
+    }
+
+    .report-card:hover {
+
+        transform: translateY(-3px);
+
+    }
+
+    .report-table th,
+    .report-table td {
+
+        vertical-align: middle;
+
+        white-space: nowrap;
+
+    }
+
+    .report-table tbody tr:hover {
+
+        background-color: rgba(13, 110, 253, 0.05);
+
+    }
+
+
+    /* ==========================================
+       Monthly Analysis
+    ========================================== */
+
+    .monthly-table th,
+    .monthly-table td {
+
+        vertical-align: middle;
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ==========================================
+       Report Action Buttons
+    ========================================== */
+
+    .report-actions {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 10px;
+
+    }
+
+    .report-actions .btn {
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ==========================================
+       Search Area
+    ========================================== */
+
+    .search-actions {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+    }
+
+
+    /* ==========================================
+       Pagination
+    ========================================== */
+
+    .pagination {
+
+        flex-wrap: wrap;
+
+        gap: 5px;
+
+    }
+
+    .pagination .page-link {
+
+        border-radius: 6px;
+
+    }
+
+
+    /* ==========================================
+       Print Styling
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .container-fluid,
+        .container {
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .report-table,
+        .monthly-table {
+
+            font-size: 11px;
+
+        }
+
+        .report-card {
+
+            transform: none !important;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+        /* --------------------------------------
+           Page Header
+        -------------------------------------- */
+
+        .report-header {
+
+            flex-direction: column;
+
+            align-items: flex-start !important;
+
+            gap: 15px;
+
+        }
+
+        .report-header > div {
+
+            width: 100%;
+
+        }
+
+
+        /* --------------------------------------
+           Report Action Buttons
+        -------------------------------------- */
+
+        .report-actions {
+
+            width: 100%;
+
+        }
+
+        .report-actions .btn {
+
+            width: 100%;
+
+        }
+
+
+        /* --------------------------------------
+           Search Form
+        -------------------------------------- */
+
+        .search-card .card-body {
+
+            padding: 15px;
+
+        }
+
+        .search-actions {
+
+            width: 100%;
+
+        }
+
+        .search-actions .btn {
+
+            flex: 1;
+
+        }
+
+
+        /* --------------------------------------
+           Summary Cards
+        -------------------------------------- */
+
+        .summary-card {
+
+            width: 100%;
+
+        }
+
+        .report-card .card-body {
+
+            padding: 20px 15px;
+
+        }
+
+
+        /* --------------------------------------
+           Tables
+        -------------------------------------- */
+
+        .report-table {
+
+            min-width: 850px;
+
+        }
+
+        .monthly-table {
+
+            min-width: 650px;
+
+        }
+
+        .table-responsive {
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+
+        /* --------------------------------------
+           Pagination
+        -------------------------------------- */
+
+        .pagination {
+
+            justify-content: center;
+
+        }
+
+        .pagination .page-link {
+
+            font-size: 14px;
+
+            padding: 8px 10px;
+
+        }
+
+
+        /* --------------------------------------
+           Report Information
+        -------------------------------------- */
+
+        .report-information {
+
+            padding: 0 10px;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid mt-4">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4 report-header">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-cash-stack text-success me-2"></i>
+
+                Rent Collection Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Track rent payments, collections and pending amounts
+
+            </p>
+
+        </div>
+
+
+        <!-- ==========================================
+             Report Actions
+        ========================================== -->
+
+        <div class="no-print report-actions">
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="btn btn-primary"
+            >
+
+                <i class="bi bi-printer me-1"></i>
+
+                Print Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Search
+    ========================================== -->
+
+    <div class="card shadow-sm border-0 mb-4 no-print search-card">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+
+                        <i class="bi bi-search"></i>
+
+                    </span>
+
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search Student..."
+                        value="{{ request.GET.search|default:'' }}"
+                    >
+
+
+                    <button
+                        class="btn btn-success"
+                        type="submit"
+                    >
+
+                        <i class="bi bi-search me-1"></i>
+
+                        Search
+
+                    </button>
+
+
+                    {% if request.GET.search %}
+
+                    <a
+                        href="{% url 'rent_report' %}"
+                        class="btn btn-secondary"
+                    >
+
+                        <i class="bi bi-x-circle me-1"></i>
+
+                        Clear
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Summary Cards
+    ========================================== -->
+
+    <div class="row mb-4">
+
+
+        <!-- ======================================
+             Total Collection
+        ======================================= -->
+
+        <div class="col-12 col-md-6 mb-3 summary-card">
+
+            <div class="card bg-success text-white shadow border-0 report-card">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-cash-stack display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Collection
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ total_collection|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Total Pending
+        ======================================= -->
+
+        <div class="col-12 col-md-6 mb-3 summary-card">
+
+            <div class="card bg-danger text-white shadow border-0 report-card">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-hourglass-split display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Pending
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ total_pending|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Monthly Rent Analysis
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-calendar3 me-2"></i>
+
+                Monthly Rent Analysis
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover mb-0 monthly-table">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Year</th>
+
+                            <th>Month</th>
+
+                            <th>Collection</th>
+
+                            <th>Pending</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in monthly_analysis %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+
+                                    {{ item.year }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+
+                                    {{ item.month }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="text-success fw-bold">
+
+                                    ₹ {{ item.collection|default:0 }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if item.pending %}
+
+                                    {% if item.pending > 0 %}
+
+                                        <span class="text-danger fw-bold">
+
+                                            ₹ {{ item.pending }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-success">
+
+                                            ₹ 0
+
+                                        </span>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="text-success">
+
+                                        ₹ 0
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="text-center py-4"
+                            >
+
+                                <i class="bi bi-calendar-x display-6 text-muted"></i>
+
+                                <p class="text-muted mb-0 mt-2">
+
+                                    No monthly rent analysis available.
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Rent Records
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-receipt-cutoff me-2"></i>
+
+                Rent Payment Records
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover mb-0 report-table">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Receipt</th>
+
+                            <th>Student</th>
+
+                            <th>Month</th>
+
+                            <th>Year</th>
+
+                            <th>Paid</th>
+
+                            <th>Pending</th>
+
+                            <th>Payment Mode</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for rent in rents %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if rent.receipt_number %}
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ rent.receipt_number }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+
+                                    {{ rent.student.name }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ rent.month }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ rent.year }}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="fw-bold text-success">
+
+                                    ₹ {{ rent.paid_amount|default:0 }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if rent.pending_amount %}
+
+                                    {% if rent.pending_amount > 0 %}
+
+                                        <span class="fw-bold text-danger">
+
+                                            ₹ {{ rent.pending_amount }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-success">
+
+                                            ₹ 0
+
+                                        </span>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="text-success">
+
+                                        ₹ 0
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ rent.payment_mode|default:"-" }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if rent.status == 'Paid' %}
+
+                                    <span class="badge bg-success">
+
+                                        <i class="bi bi-check-circle me-1"></i>
+
+                                        Paid
+
+                                    </span>
+
+                                {% elif rent.status == 'Partial' %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        <i class="bi bi-clock me-1"></i>
+
+                                        Partial
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        <i class="bi bi-exclamation-circle me-1"></i>
+
+                                        Pending
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="9"
+                                class="text-center py-5"
+                            >
+
+                                <i class="bi bi-receipt display-6 text-muted"></i>
+
+                                <p class="text-muted mt-2 mb-0">
+
+                                    No Rent Records Found
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Pagination
+    ========================================== -->
+
+    {% if rents.has_other_pages %}
+
+    <nav
+        aria-label="Rent report pagination"
+        class="no-print"
+    >
+
+        <ul class="pagination justify-content-center">
+
+
+            <!-- ======================================
+                 Previous
+            ======================================= -->
+
+            {% if rents.has_previous %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ rents.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search|urlencode }}{% endif %}"
+                >
+
+                    <i class="bi bi-chevron-left"></i>
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                    Previous
+
+                </span>
+
+            </li>
+
+            {% endif %}
+
+
+            <!-- ======================================
+                 Current Page
+            ======================================= -->
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    Page {{ rents.number }}
+
+                    of {{ rents.paginator.num_pages }}
+
+                </span>
+
+            </li>
+
+
+            <!-- ======================================
+                 Next
+            ======================================= -->
+
+            {% if rents.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ rents.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search|urlencode }}{% endif %}"
+                >
+
+                    Next
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+
+                    Next
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </span>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+
+    <!-- ==========================================
+         Report Information
+    ========================================== -->
+
+    <div class="text-center text-muted mb-4 report-information">
+
+        <small>
+
+            {% if rents.paginator.count %}
+
+                Showing page {{ rents.number }}
+
+                of {{ rents.paginator.num_pages }}
+
+                —
+
+                {{ rents.paginator.count }}
+
+                total rent records
+
+            {% else %}
+
+                No rent records available
+
+            {% endif %}
+
+        </small>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

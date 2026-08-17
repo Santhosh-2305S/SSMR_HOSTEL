@@ -1,0 +1,649 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+
+   <div class="row align-items-center mb-4">
+
+    <div class="col-lg-6 col-md-6 col-12">
+
+        <h2 class="fw-bold">
+
+            <i class="bi bi-people-fill text-primary"></i>
+
+            Student Management
+
+        </h2>
+
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-12 text-md-end mt-3 mt-md-0">
+
+        <a href="{% url 'add_student' %}"
+           class="btn btn-success">
+
+            <i class="bi bi-plus-circle"></i>
+
+            Add Student
+
+        </a>
+
+    </div>
+
+</div>
+    <!-- Search & Filters -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <!-- Filter Card -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-funnel-fill"></i>
+
+            Student Filters
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row g-3">
+
+                <div class="row mb-4">
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-primary text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-people-fill display-5"></i>
+
+                <h6 class="mt-2">Total Students</h6>
+
+                <h3 class="counter">{{ total_students }}</h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-success text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-person-check-fill display-5"></i>
+
+                <h6 class="mt-2">Active Students</h6>
+
+                <h3 class="counter">{{ active_students }}</h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-warning text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-house-door-fill display-5"></i>
+
+                <h6 class="mt-2">Rooms Occupied</h6>
+
+                <h3 class="counter">{{ occupied_rooms }}</h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-danger text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-door-open-fill display-5"></i>
+
+                <h6 class="mt-2">Vacant Beds</h6>
+
+                <h3 class="counter">{{ vacant_beds }}</h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+                <!-- Search -->
+
+                <div class="col-lg-4">
+
+                    <label class="form-label">
+
+                        Search Student
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Enter student name..."
+                        value="{{ request.GET.search }}">
+
+                </div>
+
+                <!-- Room -->
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+
+                        Room
+
+                    </label>
+
+                    <select
+                        name="room"
+                        class="form-select">
+
+                        <option value="">
+
+                            All Rooms
+
+                        </option>
+
+                        {% for room in rooms %}
+
+                        <option
+                            value="{{ room.id }}"
+                            {% if selected_room == room.id|stringformat:"s" %}
+                            selected
+                            {% endif %}>
+
+                            {{ room.room_number }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Sort -->
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+
+                        Sort By
+
+                    </label>
+
+                    <select
+                        name="sort"
+                        class="form-select">
+
+                        <option
+                            value="name"
+                            {% if sort == "name" %}
+                            selected
+                            {% endif %}>
+
+                            Name (A-Z)
+
+                        </option>
+
+                        <option
+                            value="-name"
+                            {% if sort == "-name" %}
+                            selected
+                            {% endif %}>
+
+                            Name (Z-A)
+
+                        </option>
+
+                        <option
+                            value="room"
+                            {% if sort == "room" %}
+                            selected
+                            {% endif %}>
+
+                            Room Number
+
+                        </option>
+
+                        <option
+                            value="latest"
+                            {% if sort == "latest" %}
+                            selected
+                            {% endif %}>
+
+                            Latest Added
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Buttons -->
+
+                <div class="col-lg-2 d-flex align-items-end">
+
+                    <button
+                        class="btn btn-primary w-100 me-2">
+
+                        <i class="bi bi-search"></i>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="mt-3">
+
+                <a href="{% url 'student_list' %}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-clockwise"></i>
+
+                    Reset Filters
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+        </div>
+
+    </div>
+
+    <!-- Student Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+<tr>
+
+    <th>#</th>
+
+    <th>Photo</th>
+
+    <th>Student Details</th>
+
+    <th>Room</th>
+
+    <th>Bed</th>
+
+    <th>Food</th>
+
+    <th>Phone</th>
+
+    <th>Status</th>
+
+    <th width="170">Action</th>
+
+</tr>
+
+</thead>
+
+                    <tbody>
+
+{% for student in students %}
+
+<tr>
+
+    <td>
+
+        {{ forloop.counter }}
+
+    </td>
+
+    <td class="text-center">
+
+        {% if student.photo %}
+
+            <img src="{{ student.photo.url }}"
+                 class="student-photo">
+
+        {% else %}
+
+            <img src="https://via.placeholder.com/45"
+                 class="student-photo">
+
+        {% endif %}
+
+    </td>
+
+    <td>
+
+        <strong>
+
+            {{ student.name }}
+
+        </strong>
+
+        <br>
+
+        <small class="text-muted">
+
+            {{ student.phone }}
+
+        </small>
+
+    </td>
+
+    <td>
+
+        <span class="badge bg-primary">
+
+            {{ student.room.room_number }}
+
+        </span>
+
+    </td>
+
+    <td>
+
+        <span class="badge bg-secondary">
+
+            {{ student.bed.bed_number }}
+
+        </span>
+
+    </td>
+
+    <td>
+
+        {% if student.food_type == "Veg" %}
+
+            <span class="badge bg-success">
+
+                🌿 Veg
+
+            </span>
+
+        {% else %}
+
+            <span class="badge bg-warning text-dark">
+
+                🍗 Non Veg
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+    <td>
+
+        {{ student.phone }}
+
+    </td>
+
+    <td>
+
+        {% if student.status == "Active" %}
+
+<span class="badge bg-success">
+
+    {{ student.status }}
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+    {{ student.status }}
+
+</span>
+
+{% endif %}
+
+    </td>
+
+    <td class="text-center">
+
+    <div class="dropdown">
+
+        <button class="btn btn-outline-secondary btn-sm"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+
+            <i class="bi bi-three-dots-vertical"></i>
+
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+
+            <li>
+                <a class="dropdown-item"
+                   href="{% url 'student_detail' student.id %}">
+
+                    <i class="bi bi-eye text-primary me-2"></i>
+
+                    View
+
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item"
+                   href="{% url 'edit_student' student.id %}">
+
+                    <i class="bi bi-pencil text-warning me-2"></i>
+
+                    Edit
+
+                </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li>
+                <a class="dropdown-item text-danger"
+                   href="{% url 'delete_student' student.id %}"
+                   onclick="return confirm('Delete this student?');">
+
+                    <i class="bi bi-trash me-2"></i>
+
+                    Delete
+
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+    <td colspan="9" class="text-center py-4">
+
+        <i class="bi bi-exclamation-circle"></i>
+
+        No Students Found
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Pagination -->
+
+{% if students.has_other_pages %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap mt-4">
+
+    <div class="text-muted mb-2">
+
+        Showing
+        <strong>{{ students.start_index }}</strong>
+        to
+        <strong>{{ students.end_index }}</strong>
+        of
+        <strong>{{ students.paginator.count }}</strong>
+        students
+
+    </div>
+
+    <nav>
+
+        <ul class="pagination mb-0">
+
+            {% if students.has_previous %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ students.previous_page_number }}&search={{ request.GET.search }}&room={{ selected_room }}&sort={{ sort }}">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                </a>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                </span>
+
+            </li>
+
+            {% endif %}
+
+            {% for num in students.paginator.page_range %}
+
+                {% if students.number == num %}
+
+                    <li class="page-item active">
+
+                        <span class="page-link">
+
+                            {{ num }}
+
+                        </span>
+
+                    </li>
+
+                {% elif num > students.number|add:'-3' and num < students.number|add:'3' %}
+
+                    <li class="page-item">
+
+                        <a class="page-link"
+                           href="?page={{ num }}&search={{ request.GET.search }}&room={{ selected_room }}&sort={{ sort }}">
+
+                            {{ num }}
+
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+            {% if students.has_next %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ students.next_page_number }}&search={{ request.GET.search }}&room={{ selected_room }}&sort={{ sort }}">
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </span>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+</div>
+
+{% endif %}
+{% endblock %}

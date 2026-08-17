@@ -1,0 +1,744 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Report Centre
+    ========================================== */
+
+    .report-center-page {
+
+        padding-bottom: 30px;
+
+    }
+
+
+    /* ==========================================
+       Page Header
+    ========================================== */
+
+    .report-center-header {
+
+        margin-bottom: 30px;
+
+    }
+
+    .report-center-header h2 {
+
+        font-weight: 700;
+
+        margin-bottom: 5px;
+
+    }
+
+    .report-center-header p {
+
+        color: #6c757d;
+
+        margin-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Report Card
+    ========================================== */
+
+    .report-center-card {
+
+        border: 0;
+
+        height: 100%;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    }
+
+    .report-center-card:hover {
+
+        transform: translateY(-5px);
+
+        box-shadow:
+            0 0.75rem 1.5rem
+            rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+
+    /* ==========================================
+       Report Icon
+    ========================================== */
+
+    .report-center-icon {
+
+        width: 70px;
+
+        height: 70px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        margin: 0 auto 15px;
+
+        border-radius: 50%;
+
+        font-size: 2rem;
+
+    }
+
+
+    /* ==========================================
+       Action Buttons
+    ========================================== */
+
+    .report-actions {
+
+        display: grid;
+
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 8px;
+
+    }
+
+    .report-actions .btn {
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ==========================================
+       Quick Access
+    ========================================== */
+
+    .quick-access-card {
+
+        border: 0;
+
+    }
+
+    .quick-access-btn {
+
+        min-height: 55px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+        .report-center-header {
+
+            text-align: center;
+
+        }
+
+        .report-actions {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .report-actions .btn {
+
+            width: 100%;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Print
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .report-center-card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .report-center-card:hover {
+
+            transform: none !important;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid report-center-page">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="report-center-header">
+
+        <h2>
+
+            <i class="bi bi-folder2-open text-primary me-2"></i>
+
+            Report Centre
+
+        </h2>
+
+        <p>
+
+            Generate, view and print hostel management reports
+
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         Main Report Cards
+    ========================================== -->
+
+    <div class="row">
+
+
+        <!-- ======================================
+             Student Reports
+        ======================================= -->
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+            <div class="card shadow report-center-card">
+
+                <div class="card-body text-center">
+
+                    <div
+                        class="report-center-icon bg-primary bg-opacity-10 text-primary"
+                    >
+
+                        <i class="bi bi-people-fill"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Student Reports
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Student details, room allocation and statistics.
+
+                    </p>
+
+
+                    <div class="report-actions">
+
+
+                        <a
+                            href="{% url 'student_report_pdf' %}"
+                            class="btn btn-danger"
+                        >
+
+                            <i class="bi bi-file-earmark-pdf"></i>
+
+                            PDF
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'student_report_excel' %}"
+                            class="btn btn-success"
+                        >
+
+                            <i class="bi bi-file-earmark-excel"></i>
+
+                            Excel
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'student_report_print' %}"
+                            target="_blank"
+                            class="btn btn-primary"
+                        >
+
+                            <i class="bi bi-printer"></i>
+
+                            Print
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Room Reports
+        ======================================= -->
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+            <div class="card shadow report-center-card">
+
+                <div class="card-body text-center">
+
+                    <div
+                        class="report-center-icon bg-success bg-opacity-10 text-success"
+                    >
+
+                        <i class="bi bi-building-fill"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Room Reports
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Room vacancy, bed capacity and rent details.
+
+                    </p>
+
+
+                    <div class="report-actions">
+
+
+                        <a
+                            href="{% url 'room_report_pdf' %}"
+                            class="btn btn-danger"
+                        >
+
+                            <i class="bi bi-file-earmark-pdf"></i>
+
+                            PDF
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'room_report_excel' %}"
+                            class="btn btn-success"
+                        >
+
+                            <i class="bi bi-file-earmark-excel"></i>
+
+                            Excel
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'room_report_print' %}"
+                            target="_blank"
+                            class="btn btn-primary"
+                        >
+
+                            <i class="bi bi-printer"></i>
+
+                            Print
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Bed Reports
+        ======================================= -->
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+            <div class="card shadow report-center-card">
+
+                <div class="card-body text-center">
+
+                    <div
+                        class="report-center-icon bg-info bg-opacity-10 text-info"
+                    >
+
+                        <i class="bi bi-bed-fill"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Bed Reports
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        View occupied and vacant bed information.
+
+                    </p>
+
+
+                    <div class="report-actions">
+
+
+                        <a
+                            href="{% url 'bed_report_pdf' %}"
+                            class="btn btn-danger"
+                        >
+
+                            <i class="bi bi-file-earmark-pdf"></i>
+
+                            PDF
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'bed_report_excel' %}"
+                            class="btn btn-success"
+                        >
+
+                            <i class="bi bi-file-earmark-excel"></i>
+
+                            Excel
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'bed_report_print' %}"
+                            target="_blank"
+                            class="btn btn-primary"
+                        >
+
+                            <i class="bi bi-printer"></i>
+
+                            Print
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Student Statistics
+        ======================================= -->
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+            <div class="card shadow report-center-card">
+
+                <div class="card-body text-center">
+
+                    <div
+                        class="report-center-icon bg-warning bg-opacity-10 text-warning"
+                    >
+
+                        <i class="bi bi-bar-chart-fill"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Student Statistics
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Analyse active, left and food preference statistics.
+
+                    </p>
+
+
+                    <div class="d-grid">
+
+                        <a
+                            href="{% url 'student_statistics' %}"
+                            class="btn btn-warning"
+                        >
+
+                            <i class="bi bi-graph-up-arrow me-1"></i>
+
+                            View Statistics
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Financial Analytics
+        ======================================= -->
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+            <div class="card shadow report-center-card">
+
+                <div class="card-body text-center">
+
+                    <div
+                        class="report-center-icon bg-success bg-opacity-10 text-success"
+                    >
+
+                        <i class="bi bi-graph-up-arrow"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Financial Analytics
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Analyse income, expenses and monthly trends.
+
+                    </p>
+
+
+                    <div class="d-grid">
+
+                        <a
+                            href="{% url 'financial_analytics' %}"
+                            class="btn btn-success"
+                        >
+
+                            <i class="bi bi-bar-chart-line-fill me-1"></i>
+
+                            View Analytics
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Reports Dashboard
+        ======================================= -->
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+            <div class="card shadow report-center-card">
+
+                <div class="card-body text-center">
+
+                    <div
+                        class="report-center-icon bg-dark bg-opacity-10 text-dark"
+                    >
+
+                        <i class="bi bi-speedometer2"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Reports Dashboard
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        View overall hostel reports and financial summary.
+
+                    </p>
+
+
+                    <div class="d-grid">
+
+                        <a
+                            href="{% url 'reports_dashboard' %}"
+                            class="btn btn-dark"
+                        >
+
+                            <i class="bi bi-speedometer2 me-1"></i>
+
+                            Open Dashboard
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Quick Access
+    ========================================== -->
+
+    <div class="card shadow-sm quick-access-card mt-2 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-lightning-fill me-2"></i>
+
+                Quick Access
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row">
+
+
+                <!-- Student Report -->
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+                    <a
+                        href="{% url 'student_report' %}"
+                        class="btn btn-outline-primary w-100 quick-access-btn"
+                    >
+
+                        <i class="bi bi-people-fill"></i>
+
+                        Student Report
+
+                    </a>
+
+                </div>
+
+
+                <!-- Room Report -->
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+                    <a
+                        href="{% url 'room_report' %}"
+                        class="btn btn-outline-success w-100 quick-access-btn"
+                    >
+
+                        <i class="bi bi-building-fill"></i>
+
+                        Room Report
+
+                    </a>
+
+                </div>
+
+
+                <!-- Rent Report -->
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+                    <a
+                        href="{% url 'rent_report' %}"
+                        class="btn btn-outline-warning w-100 quick-access-btn"
+                    >
+
+                        <i class="bi bi-cash-stack"></i>
+
+                        Rent Report
+
+                    </a>
+
+                </div>
+
+
+                <!-- Expense Report -->
+
+                <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+                    <a
+                        href="{% url 'expense_report' %}"
+                        class="btn btn-outline-danger w-100 quick-access-btn"
+                    >
+
+                        <i class="bi bi-receipt"></i>
+
+                        Expense Report
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

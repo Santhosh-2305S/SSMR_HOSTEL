@@ -1,0 +1,176 @@
+<div class="sidebar">
+
+    <!-- Logo -->
+    <div class="text-center py-4">
+
+        <i class="bi bi-building-fill fs-1 text-info"></i>
+
+        <h4 class="text-white fw-bold mt-2 mb-0">
+
+            SSMR MENS PG
+
+        </h4>
+
+        <small class="text-secondary">
+
+            Hostel Management
+
+        </small>
+
+    </div>
+
+    <hr class="text-secondary m-0">
+
+    <!-- Navigation -->
+
+    <ul class="nav flex-column mt-3">
+
+        <li class="nav-item">
+
+            <a href="{% url 'dashboard' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+
+                <i class="bi bi-speedometer2"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'room_list' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'room_list' %}active{% endif %}">
+
+                <i class="bi bi-house-door-fill"></i>
+
+                <span>Rooms</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'bed_list' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'bed_list' %}active{% endif %}">
+
+                <i class="bi bi-bed-fill"></i>
+
+                <span>Beds</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'student_list' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'student_list' %}active{% endif %}">
+
+                <i class="bi bi-people-fill"></i>
+
+                <span>Students</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'rent_list' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'rent_list' %}active{% endif %}">
+
+                <i class="bi bi-cash-stack"></i>
+
+                <span>Rent</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'food_list' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'food_list' %}active{% endif %}">
+
+                <i class="bi bi-egg-fried"></i>
+
+                <span>Food</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'expense_list' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'expense_list' %}active{% endif %}">
+
+                <i class="bi bi-wallet2"></i>
+
+                <span>Expenses</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'reports_dashboard' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'reports_dashboard' %}active{% endif %}">
+
+                <i class="bi bi-bar-chart-fill"></i>
+
+                <span>Reports</span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+    <a href="{% url 'student_statistics' %}"
+       class="nav-link {% if request.resolver_match.url_name == 'student_statistics' %}active{% endif %}">
+
+        <i class="bi bi-graph-up-arrow"></i>
+
+        <span>Student Statistics</span>
+
+    </a>
+
+</li>
+
+    </ul>
+
+    <li class="nav-item">
+
+    <a href="{% url 'report_center' %}"
+       class="nav-link {% if request.resolver_match.url_name == 'report_center' %}active{% endif %}">
+
+        <i class="bi bi-file-earmark-bar-graph-fill"></i>
+
+        <span>Report Center</span>
+
+    </a>
+
+</li>
+
+    <!-- Bottom Logout -->
+
+    <li class="nav-item mt-3">
+
+    <a href="{% url 'logout' %}"
+       class="nav-link text-danger"
+       onclick="return confirm('Are you sure you want to logout?');">
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        <span>Logout</span>
+
+    </a>
+
+</li>
+
+</div>

@@ -1,0 +1,1115 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Student Statistics
+    ========================================== */
+
+    .statistics-page {
+
+        padding-bottom: 20px;
+
+    }
+
+
+    /* ==========================================
+       Page Header
+    ========================================== */
+
+    .statistics-header {
+
+        margin-bottom: 30px;
+
+    }
+
+    .statistics-header h2 {
+
+        font-weight: 700;
+
+        margin-bottom: 5px;
+
+    }
+
+    .statistics-header p {
+
+        color: #6c757d;
+
+        margin-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Action Buttons
+    ========================================== */
+
+    .statistics-actions {
+
+        display: flex;
+
+        justify-content: flex-end;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+    }
+
+    .statistics-actions .btn {
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ==========================================
+       Summary Cards
+    ========================================== */
+
+    .statistics-card {
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    }
+
+    .statistics-card:hover {
+
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+    .statistics-card h2 {
+
+        font-weight: 700;
+
+        margin-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Chart Cards
+    ========================================== */
+
+    .chart-card {
+
+        height: 100%;
+
+        border: 0;
+
+    }
+
+    .chart-container {
+
+        position: relative;
+
+        width: 100%;
+
+        min-height: 300px;
+
+    }
+
+    .chart-container canvas {
+
+        width: 100% !important;
+
+        height: 300px !important;
+
+    }
+
+
+    /* ==========================================
+       College Table
+    ========================================== */
+
+    .college-table th,
+    .college-table td {
+
+        vertical-align: middle;
+
+        white-space: nowrap;
+
+    }
+
+    .college-table tbody tr:hover {
+
+        background-color: rgba(13, 110, 253, 0.05);
+
+    }
+
+
+    /* ==========================================
+       Monthly Chart
+    ========================================== */
+
+    .joining-chart-container {
+
+        position: relative;
+
+        width: 100%;
+
+        min-height: 350px;
+
+    }
+
+    .joining-chart-container canvas {
+
+        width: 100% !important;
+
+        height: 350px !important;
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+
+        /* --------------------------------------
+           Header
+        -------------------------------------- */
+
+        .statistics-header {
+
+            text-align: center;
+
+        }
+
+
+        /* --------------------------------------
+           Action Buttons
+        -------------------------------------- */
+
+        .statistics-actions {
+
+            width: 100%;
+
+            justify-content: stretch;
+
+        }
+
+        .statistics-actions .btn {
+
+            flex: 1;
+
+            min-width: 90px;
+
+        }
+
+
+        /* --------------------------------------
+           Summary Cards
+        -------------------------------------- */
+
+        .statistics-card {
+
+            margin-bottom: 15px;
+
+        }
+
+
+        /* --------------------------------------
+           Charts
+        -------------------------------------- */
+
+        .chart-container {
+
+            min-height: 250px;
+
+        }
+
+        .chart-container canvas {
+
+            height: 250px !important;
+
+        }
+
+
+        .joining-chart-container {
+
+            min-height: 280px;
+
+        }
+
+        .joining-chart-container canvas {
+
+            height: 280px !important;
+
+        }
+
+
+        /* --------------------------------------
+           College Table
+        -------------------------------------- */
+
+        .table-responsive {
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+        .college-table {
+
+            min-width: 600px;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Extra Small Devices
+    ========================================== */
+
+    @media (max-width: 575.98px) {
+
+        .statistics-actions {
+
+            flex-direction: column;
+
+        }
+
+        .statistics-actions .btn {
+
+            width: 100%;
+
+            flex: none;
+
+        }
+
+        .chart-container canvas {
+
+            height: 230px !important;
+
+        }
+
+        .joining-chart-container canvas {
+
+            height: 250px !important;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Print
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .statistics-card:hover {
+
+            transform: none !important;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid statistics-page">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="row mb-4 align-items-center statistics-header">
+
+
+        <!-- ======================================
+             Title
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+
+                Student Statistics
+
+            </h2>
+
+            <p>
+
+                Student overview, food preference and joining statistics
+
+            </p>
+
+        </div>
+
+
+        <!-- ======================================
+             Action Buttons
+        ======================================= -->
+
+        <div class="col-12 col-lg-6">
+
+            <div class="statistics-actions no-print">
+
+
+                <!-- PDF -->
+
+                <a
+                    href="{% url 'student_statistics_pdf' %}"
+                    class="btn btn-danger"
+                >
+
+                    <i class="bi bi-file-earmark-pdf me-1"></i>
+
+                    PDF
+
+                </a>
+
+
+                <!-- Excel -->
+
+                <a
+                    href="{% url 'student_statistics_excel' %}"
+                    class="btn btn-success"
+                >
+
+                    <i class="bi bi-file-earmark-excel me-1"></i>
+
+                    Excel
+
+                </a>
+
+
+                <!-- Print -->
+
+                <a
+                    href="{% url 'student_statistics_print' %}"
+                    target="_blank"
+                    class="btn btn-primary"
+                >
+
+                    <i class="bi bi-printer me-1"></i>
+
+                    Print
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Summary Cards
+    ========================================== -->
+
+    <div class="row">
+
+
+        <!-- ======================================
+             Total Students
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-primary text-white shadow border-0 h-100 statistics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-people-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Students
+
+                    </h6>
+
+                    <h2>
+
+                        {{ total_students|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Active Students
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-success text-white shadow border-0 h-100 statistics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-check-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Active Students
+
+                    </h6>
+
+                    <h2>
+
+                        {{ active_students|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Left Students
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-danger text-white shadow border-0 h-100 statistics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-dash-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Left Students
+
+                    </h6>
+
+                    <h2>
+
+                        {{ left_students|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Veg Students
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-warning text-dark shadow border-0 h-100 statistics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-egg-fried display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Veg Students
+
+                    </h6>
+
+                    <h2>
+
+                        {{ veg_students|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Additional Food Summary
+    ========================================== -->
+
+    <div class="row mb-2">
+
+
+        <!-- ======================================
+             Non Veg Students
+        ======================================= -->
+
+        <div class="col-12 col-md-6 mb-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h6 class="text-muted mb-1">
+
+                            Non Veg Students
+
+                        </h6>
+
+                        <h4 class="fw-bold mb-0">
+
+                            {{ nonveg_students|default:0 }}
+
+                        </h4>
+
+                    </div>
+
+                    <i class="bi bi-egg-fill text-danger fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Food Total Check
+        ======================================= -->
+
+        <div class="col-12 col-md-6 mb-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h6 class="text-muted mb-1">
+
+                            Food Preference Total
+
+                        </h6>
+
+                        <h4 class="fw-bold mb-0">
+
+                            {% widthratio veg_students 1 1 %}
+
+                            {% if nonveg_students %}
+
+                                +
+
+                                {{ nonveg_students }}
+
+                            {% endif %}
+
+                        </h4>
+
+                    </div>
+
+                    <i class="bi bi-pie-chart-fill text-primary fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Charts and College Data
+    ========================================== -->
+
+    <div class="row mt-4">
+
+
+        <!-- ======================================
+             Food Preference Chart
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-4">
+
+            <div class="card shadow border-0 chart-card">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-pie-chart-fill me-2"></i>
+
+                        Food Preference
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="chart-container">
+
+                        <canvas id="foodChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             College Wise Students
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-4">
+
+            <div class="card shadow border-0 chart-card">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-building me-2"></i>
+
+                        College Wise Students
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        <table
+                            class="table table-hover mb-0 college-table"
+                        >
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>
+
+                                        College
+
+                                    </th>
+
+                                    <th class="text-center">
+
+                                        Total
+
+                                    </th>
+
+                                    <th class="text-center">
+
+                                        Active
+
+                                    </th>
+
+                                    <th class="text-center">
+
+                                        Left
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for item in college_data %}
+
+                                <tr>
+
+                                    <td>
+
+                                        {{ item.college }}
+
+                                    </td>
+
+
+                                    <td class="text-center">
+
+                                        <span class="badge bg-primary">
+
+                                            {{ item.total }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td class="text-center">
+
+                                        <span class="badge bg-success">
+
+                                            {{ item.active }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td class="text-center">
+
+                                        <span class="badge bg-danger">
+
+                                            {{ item.left }}
+
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                {% empty %}
+
+                                <tr>
+
+                                    <td
+                                        colspan="4"
+                                        class="text-center text-danger py-4"
+                                    >
+
+                                        <i
+                                            class="bi bi-database-x fs-3 d-block mb-2"
+                                        ></i>
+
+                                        No Data Available
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Monthly Student Joinings
+    ========================================== -->
+
+    <div class="row mt-2">
+
+        <div class="col-12 mb-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-graph-up me-2"></i>
+
+                        Monthly Student Joinings
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="joining-chart-container">
+
+                        <canvas id="joiningChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* ==========================================
+           Food Preference Pie Chart
+        ========================================== */
+
+        const foodCanvas =
+            document.getElementById("foodChart");
+
+
+        if (foodCanvas) {
+
+            new Chart(
+                foodCanvas,
+                {
+
+                    type: "pie",
+
+                    data: {
+
+                        labels: [
+
+                            "Veg",
+
+                            "Non Veg"
+
+                        ],
+
+                        datasets: [{
+
+                            data: [
+
+                                {{ veg_students|default:0 }},
+
+                                {{ nonveg_students|default:0 }}
+
+                            ],
+
+                            backgroundColor: [
+
+                                "#198754",
+
+                                "#dc3545"
+
+                            ]
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: "bottom"
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ==========================================
+           Monthly Student Joining Chart
+        ========================================== */
+
+        const joiningCanvas =
+            document.getElementById("joiningChart");
+
+
+        if (joiningCanvas) {
+
+
+            const months = [
+
+                "Jan",
+
+                "Feb",
+
+                "Mar",
+
+                "Apr",
+
+                "May",
+
+                "Jun",
+
+                "Jul",
+
+                "Aug",
+
+                "Sep",
+
+                "Oct",
+
+                "Nov",
+
+                "Dec"
+
+            ];
+
+
+            const joiningData =
+                Array(12).fill(0);
+
+
+            {% for item in monthly_joinings %}
+
+            joiningData[
+                {{ item.month }} - 1
+            ] = {{ item.total }};
+
+            {% endfor %}
+
+
+            new Chart(
+                joiningCanvas,
+                {
+
+                    type: "line",
+
+                    data: {
+
+                        labels: months,
+
+                        datasets: [{
+
+                            label:
+                                "Students Joined",
+
+                            data:
+                                joiningData,
+
+                            borderColor:
+                                "#0d6efd",
+
+                            backgroundColor:
+                                "rgba(13, 110, 253, 0.2)",
+
+                            fill: true,
+
+                            tension: 0.4,
+
+                            pointRadius: 4,
+
+                            pointHoverRadius: 6
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                display: true,
+
+                                position: "bottom"
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+
+                                    precision: 0
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

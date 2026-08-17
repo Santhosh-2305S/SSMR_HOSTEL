@@ -1,0 +1,109 @@
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Student</label>
+        {{ form.student }}
+        {% if form.student.errors %}
+        <div class="text-danger small">{{ form.student.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Month</label>
+        {{ form.month }}
+        {% if form.month.errors %}
+        <div class="text-danger small">{{ form.month.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Year</label>
+        {{ form.year }}
+        {% if form.year.errors %}
+        <div class="text-danger small">{{ form.year.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Monthly Rent</label>
+        {{ form.monthly_rent }}
+        {% if form.monthly_rent.errors %}
+        <div class="text-danger small">{{ form.monthly_rent.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Late Fine</label>
+        {{ form.late_fine }}
+        {% if form.late_fine.errors %}
+        <div class="text-danger small">{{ form.late_fine.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Paid Amount</label>
+        {{ form.paid_amount }}
+        {% if form.paid_amount.errors %}
+        <div class="text-danger small">{{ form.paid_amount.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Payment Date</label>
+        {{ form.payment_date }}
+        {% if form.payment_date.errors %}
+        <div class="text-danger small">{{ form.payment_date.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Payment Mode</label>
+        {{ form.payment_mode }}
+        {% if form.payment_mode.errors %}
+        <div class="text-danger small">{{ form.payment_mode.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Transaction ID</label>
+        {{ form.transaction_id }}
+        {% if form.transaction_id.errors %}
+        <div class="text-danger small">{{ form.transaction_id.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Collected By</label>
+        {{ form.collected_by }}
+        {% if form.collected_by.errors %}
+        <div class="text-danger small">{{ form.collected_by.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Status</label>
+        {{ form.status }}
+        {% if form.status.errors %}
+        <div class="text-danger small">{{ form.status.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label class="form-label">Remarks</label>
+        {{ form.remarks }}
+        {% if form.remarks.errors %}
+        <div class="text-danger small">{{ form.remarks.errors }}</div>
+        {% endif %}
+    </div>
+
+</div>
+
+<div class="mt-3">
+    <button type="submit" class="btn btn-primary">
+        Update Payment
+    </button>
+
+    <a href="{% url 'rent_list' %}" class="btn btn-secondary">
+        Cancel
+    </a>
+</div>

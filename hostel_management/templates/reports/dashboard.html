@@ -1,0 +1,1044 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Reports Dashboard
+    ========================================== */
+
+    .report-page {
+
+        padding-bottom: 30px;
+
+    }
+
+
+    /* ==========================================
+       Page Header
+    ========================================== */
+
+    .report-header {
+
+        margin-bottom: 30px;
+
+    }
+
+    .report-header h2 {
+
+        font-weight: 700;
+
+        margin-bottom: 5px;
+
+    }
+
+    .report-header p {
+
+        margin-bottom: 0;
+
+        color: #6c757d;
+
+    }
+
+
+    /* ==========================================
+       Summary Cards
+    ========================================== */
+
+    .summary-card {
+
+        border: 0;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    }
+
+    .summary-card:hover {
+
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+    .summary-icon {
+
+        font-size: 2rem;
+
+        margin-bottom: 10px;
+
+    }
+
+    .summary-value {
+
+        font-weight: 700;
+
+        margin-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Report Cards
+    ========================================== */
+
+    .report-card {
+
+        border: 0;
+
+        text-decoration: none;
+
+        color: inherit;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    }
+
+    .report-card:hover {
+
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+        color: inherit;
+
+    }
+
+    .report-icon {
+
+        font-size: 3rem;
+
+    }
+
+
+    /* ==========================================
+       Occupancy
+    ========================================== */
+
+    .occupancy-value {
+
+        font-size: 1.5rem;
+
+        font-weight: 700;
+
+    }
+
+    .occupancy-progress {
+
+        height: 25px;
+
+        border-radius: 8px;
+
+        overflow: hidden;
+
+    }
+
+    .occupancy-progress .progress-bar {
+
+        font-weight: 600;
+
+    }
+
+
+    /* ==========================================
+       Financial Summary
+    ========================================== */
+
+    .financial-row {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        padding: 12px 0;
+
+        border-bottom: 1px solid #dee2e6;
+
+    }
+
+    .financial-row:last-child {
+
+        border-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Additional Buttons
+    ========================================== */
+
+    .additional-report-btn {
+
+        min-height: 55px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-weight: 600;
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+        .report-header {
+
+            text-align: center;
+
+        }
+
+        .summary-card {
+
+            margin-bottom: 15px;
+
+        }
+
+        .report-card {
+
+            margin-bottom: 15px;
+
+        }
+
+        .report-icon {
+
+            font-size: 2.5rem;
+
+        }
+
+        .financial-row {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            gap: 5px;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Extra Small Devices
+    ========================================== */
+
+    @media (max-width: 575.98px) {
+
+        .report-page {
+
+            padding-left: 10px;
+
+            padding-right: 10px;
+
+        }
+
+        .occupancy-progress {
+
+            height: 22px;
+
+        }
+
+        .financial-row strong {
+
+            align-self: flex-start;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Print
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .summary-card:hover,
+        .report-card:hover {
+
+            transform: none !important;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid report-page">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="report-header">
+
+        <h2>
+
+            <i class="bi bi-bar-chart-line-fill text-primary me-2"></i>
+
+            Reports Dashboard
+
+        </h2>
+
+        <p>
+
+            SSMR MENS PG - Hostel Management Reports
+
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         Summary Cards
+    ========================================== -->
+
+    <div class="row mb-4">
+
+
+        <!-- ======================================
+             Total Students
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-primary text-white shadow h-100 summary-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <div class="summary-icon">
+
+                        <i class="bi bi-people-fill"></i>
+
+                    </div>
+
+                    <h6>
+
+                        Total Students
+
+                    </h6>
+
+                    <h2 class="summary-value">
+
+                        {{ total_students|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Total Rooms
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-success text-white shadow h-100 summary-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <div class="summary-icon">
+
+                        <i class="bi bi-building-fill"></i>
+
+                    </div>
+
+                    <h6>
+
+                        Total Rooms
+
+                    </h6>
+
+                    <h2 class="summary-value">
+
+                        {{ total_rooms|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Total Income
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-warning text-dark shadow h-100 summary-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <div class="summary-icon">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                    </div>
+
+                    <h6>
+
+                        Total Income
+
+                    </h6>
+
+                    <h2 class="summary-value">
+
+                        ₹ {{ total_income|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Total Expense
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-danger text-white shadow h-100 summary-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <div class="summary-icon">
+
+                        <i class="bi bi-wallet2"></i>
+
+                    </div>
+
+                    <h6>
+
+                        Total Expense
+
+                    </h6>
+
+                    <h2 class="summary-value">
+
+                        ₹ {{ total_expense|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Occupancy and Financial Summary
+    ========================================== -->
+
+    <div class="row mb-4">
+
+
+        <!-- ======================================
+             Bed Occupancy
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-house-door-fill me-2"></i>
+
+                        Bed Occupancy
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+
+                    <div class="row text-center mb-4">
+
+
+                        <!-- Total Beds -->
+
+                        <div class="col-4">
+
+                            <h6 class="text-muted">
+
+                                Total Beds
+
+                            </h6>
+
+                            <h4 class="fw-bold">
+
+                                {{ total_beds|default:0 }}
+
+                            </h4>
+
+                        </div>
+
+
+                        <!-- Occupied -->
+
+                        <div class="col-4">
+
+                            <h6 class="text-muted">
+
+                                Occupied
+
+                            </h6>
+
+                            <h4 class="text-warning fw-bold">
+
+                                {{ occupied_beds|default:0 }}
+
+                            </h4>
+
+                        </div>
+
+
+                        <!-- Vacant -->
+
+                        <div class="col-4">
+
+                            <h6 class="text-muted">
+
+                                Vacant
+
+                            </h6>
+
+                            <h4 class="text-success fw-bold">
+
+                                {{ vacant_beds|default:0 }}
+
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Occupancy Progress -->
+
+                    <div
+                        class="progress occupancy-progress"
+                        role="progressbar"
+                        aria-label="Bed occupancy"
+                        aria-valuenow="{{ occupancy_percentage|default:0 }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    >
+
+                        <div
+                            class="progress-bar bg-success"
+                            style="width: {{ occupancy_percentage|default:0 }}%;"
+                        >
+
+                            {{ occupancy_percentage|default:0 }}%
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-center mt-3">
+
+                        <span class="occupancy-value">
+
+                            {{ occupancy_percentage|default:0 }}%
+
+                        </span>
+
+                        <span class="text-muted">
+
+                            Occupancy Rate
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Financial Summary
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-graph-up-arrow me-2"></i>
+
+                        Financial Summary
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+
+                    <!-- Total Income -->
+
+                    <div class="financial-row">
+
+                        <span>
+
+                            <i class="bi bi-cash-coin text-success me-2"></i>
+
+                            Total Income
+
+                        </span>
+
+                        <strong class="text-success">
+
+                            ₹ {{ total_income|default:0 }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Pending Rent -->
+
+                    <div class="financial-row">
+
+                        <span>
+
+                            <i class="bi bi-hourglass-split text-warning me-2"></i>
+
+                            Pending Rent
+
+                        </span>
+
+                        <strong class="text-warning">
+
+                            ₹ {{ pending_rent|default:0 }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Total Expense -->
+
+                    <div class="financial-row">
+
+                        <span>
+
+                            <i class="bi bi-wallet2 text-danger me-2"></i>
+
+                            Total Expense
+
+                        </span>
+
+                        <strong class="text-danger">
+
+                            ₹ {{ total_expense|default:0 }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Net Profit -->
+
+                    <div class="financial-row">
+
+                        <span>
+
+                            <i class="bi bi-piggy-bank-fill text-primary me-2"></i>
+
+                            Net Profit
+
+                        </span>
+
+                        <strong class="text-primary">
+
+                            ₹ {{ net_profit|default:0 }}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Available Reports
+    ========================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h4 class="fw-bold mb-0">
+
+            <i class="bi bi-file-earmark-bar-graph me-2"></i>
+
+            Available Reports
+
+        </h4>
+
+    </div>
+
+
+    <div class="row">
+
+
+        <!-- ======================================
+             Student Report
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'student_report' %}"
+                class="card shadow h-100 report-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-people-fill text-primary report-icon"
+                    ></i>
+
+                    <h5 class="mt-3">
+
+                        Student Report
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        View student details and room allocation.
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- ======================================
+             Room Report
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'room_report' %}"
+                class="card shadow h-100 report-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-building-fill text-success report-icon"
+                    ></i>
+
+                    <h5 class="mt-3">
+
+                        Room Report
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Check room and bed vacancy details.
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- ======================================
+             Rent Report
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'rent_report' %}"
+                class="card shadow h-100 report-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-cash-stack text-success report-icon"
+                    ></i>
+
+                    <h5 class="mt-3">
+
+                        Rent Report
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Track rent collection and pending amounts.
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- ======================================
+             Food Report
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'food_report' %}"
+                class="card shadow h-100 report-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-egg-fried text-warning report-icon"
+                    ></i>
+
+                    <h5 class="mt-3">
+
+                        Food Report
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        View breakfast, lunch and dinner records.
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- ======================================
+             Expense Report
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'expense_report' %}"
+                class="card shadow h-100 report-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-receipt text-danger report-icon"
+                    ></i>
+
+                    <h5 class="mt-3">
+
+                        Expense Report
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Review hostel expenses and payments.
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- ======================================
+             Finance Report
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'finance_report' %}"
+                class="card shadow h-100 report-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-bar-chart-line-fill text-primary report-icon"
+                    ></i>
+
+                    <h5 class="mt-3">
+
+                        Financial Report
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        View income, expenses, pending rent and profit.
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Additional Reports
+    ========================================== -->
+
+    <div class="row mt-2">
+
+
+        <!-- Student Statistics -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'student_statistics' %}"
+                class="btn btn-outline-primary w-100 py-3 additional-report-btn"
+            >
+
+                <i class="bi bi-person-lines-fill me-2"></i>
+
+                Student Statistics
+
+            </a>
+
+        </div>
+
+
+        <!-- Financial Analytics -->
+
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'financial_analytics' %}"
+                class="btn btn-outline-success w-100 py-3 additional-report-btn"
+            >
+
+                <i class="bi bi-graph-up me-2"></i>
+
+                Financial Analytics
+
+            </a>
+
+        </div>
+
+
+        <!-- Report Centre -->
+
+        <div class="col-12 col-sm-12 col-lg-4 mb-4">
+
+            <a
+                href="{% url 'report_center' %}"
+                class="btn btn-outline-dark w-100 py-3 additional-report-btn"
+            >
+
+                <i class="bi bi-folder2-open me-2"></i>
+
+                Report Centre
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

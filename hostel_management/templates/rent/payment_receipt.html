@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-success text-white">
+
+<h2 class="text-center">
+
+SSMR MENS PG
+
+</h2>
+
+<h5 class="text-center">
+
+Rent Payment Receipt
+
+</h5>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Receipt No</th>
+
+<td>{{ rent.receipt_number }}</td>
+
+</tr>
+
+<tr>
+
+<th>Student</th>
+
+<td>{{ rent.student.name }}</td>
+
+</tr>
+
+<tr>
+
+<th>Room</th>
+
+<td>{{ rent.student.room.room_number }}</td>
+
+</tr>
+
+<tr>
+
+<th>Bed</th>
+
+<td>{{ rent.student.bed.bed_number }}</td>
+
+</tr>
+
+<tr>
+
+<th>Month</th>
+
+<td>{{ rent.month }}</td>
+
+</tr>
+
+<tr>
+
+<th>Year</th>
+
+<td>{{ rent.year }}</td>
+
+</tr>
+
+<tr>
+
+<th>Monthly Rent</th>
+
+<td>₹ {{ rent.monthly_rent }}</td>
+
+</tr>
+
+<tr>
+
+<th>Late Fine</th>
+
+<td>₹ {{ rent.late_fine }}</td>
+
+</tr>
+
+<tr>
+
+<th>Total Amount</th>
+
+<td>₹ {{ rent.total_amount }}</td>
+
+</tr>
+
+<tr>
+
+<th>Paid Amount</th>
+
+<td>₹ {{ rent.paid_amount }}</td>
+
+</tr>
+
+<tr>
+
+<th>Pending</th>
+
+<td>₹ {{ rent.pending_amount }}</td>
+
+</tr>
+
+<tr>
+
+<th>Payment Mode</th>
+
+<td>{{ rent.payment_mode }}</td>
+
+</tr>
+
+<tr>
+
+<th>Transaction ID</th>
+
+<td>{{ rent.transaction_id }}</td>
+
+</tr>
+
+<tr>
+
+<th>Status</th>
+
+<td>{{ rent.status }}</td>
+
+</tr>
+
+<tr>
+
+<th>Collected By</th>
+
+<td>{{ rent.collected_by }}</td>
+
+</tr>
+
+<tr>
+
+<th>Payment Date</th>
+
+<td>{{ rent.payment_date }}</td>
+
+</tr>
+
+<tr>
+
+<th>Remarks</th>
+
+<td>{{ rent.remarks }}</td>
+
+</tr>
+
+</table>
+
+<div class="text-center">
+
+<button class="btn btn-primary"
+onclick="window.print();">
+
+🖨 Print Receipt
+
+</button>
+
+<a href="{% url 'rent_list' %}"
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

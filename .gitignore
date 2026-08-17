@@ -1,0 +1,25 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Environment Variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+db.sqlite3
+
+# Static files collected for deployment
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

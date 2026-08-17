@@ -1,0 +1,976 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Financial Analytics
+    ========================================== */
+
+    .analytics-page {
+
+        padding-bottom: 20px;
+
+    }
+
+
+    /* ==========================================
+       Page Header
+    ========================================== */
+
+    .analytics-header {
+
+        margin-bottom: 30px;
+
+    }
+
+    .analytics-header h2 {
+
+        font-weight: 700;
+
+        margin-bottom: 5px;
+
+    }
+
+    .analytics-header p {
+
+        color: #6c757d;
+
+        margin-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Action Buttons
+    ========================================== */
+
+    .analytics-actions {
+
+        display: flex;
+
+        justify-content: flex-end;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+    }
+
+    .analytics-actions .btn {
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ==========================================
+       Summary Cards
+    ========================================== */
+
+    .analytics-card {
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    }
+
+    .analytics-card:hover {
+
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+    .analytics-card h3 {
+
+        font-weight: 700;
+
+        margin-bottom: 0;
+
+    }
+
+
+    /* ==========================================
+       Chart Cards
+    ========================================== */
+
+    .chart-card {
+
+        border: 0;
+
+        height: 100%;
+
+    }
+
+    .chart-container {
+
+        position: relative;
+
+        width: 100%;
+
+        height: 350px;
+
+    }
+
+    .chart-container canvas {
+
+        width: 100% !important;
+
+        height: 100% !important;
+
+    }
+
+
+    /* ==========================================
+       Financial Status
+    ========================================== */
+
+    .positive-income {
+
+        color: #198754;
+
+    }
+
+    .negative-income {
+
+        color: #dc3545;
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+
+        /* --------------------------------------
+           Header
+        -------------------------------------- */
+
+        .analytics-header {
+
+            text-align: center;
+
+        }
+
+
+        /* --------------------------------------
+           Action Buttons
+        -------------------------------------- */
+
+        .analytics-actions {
+
+            width: 100%;
+
+            justify-content: stretch;
+
+        }
+
+        .analytics-actions .btn {
+
+            flex: 1;
+
+            min-width: 90px;
+
+        }
+
+
+        /* --------------------------------------
+           Summary Cards
+        -------------------------------------- */
+
+        .analytics-card {
+
+            margin-bottom: 15px;
+
+        }
+
+
+        /* --------------------------------------
+           Charts
+        -------------------------------------- */
+
+        .chart-container {
+
+            height: 280px;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Extra Small Devices
+    ========================================== */
+
+    @media (max-width: 575.98px) {
+
+        .analytics-actions {
+
+            flex-direction: column;
+
+        }
+
+        .analytics-actions .btn {
+
+            width: 100%;
+
+            flex: none;
+
+        }
+
+        .chart-container {
+
+            height: 240px;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Print
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .analytics-card:hover {
+
+            transform: none !important;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid analytics-page">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="row mb-4 align-items-center analytics-header">
+
+
+        <!-- ======================================
+             Title
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-cash-coin text-success me-2"></i>
+
+                Financial Analytics
+
+            </h2>
+
+            <p>
+
+                Income, expenses and monthly financial performance
+
+            </p>
+
+        </div>
+
+
+        <!-- ======================================
+             Action Buttons
+        ======================================= -->
+
+        <div class="col-12 col-lg-6">
+
+            <div class="analytics-actions no-print">
+
+
+                <!-- PDF -->
+
+                <a
+                    href="{% url 'financial_analytics_pdf' %}"
+                    class="btn btn-danger"
+                >
+
+                    <i class="bi bi-file-earmark-pdf me-1"></i>
+
+                    PDF
+
+                </a>
+
+
+                <!-- Excel -->
+
+                <a
+                    href="{% url 'financial_analytics_excel' %}"
+                    class="btn btn-success"
+                >
+
+                    <i class="bi bi-file-earmark-excel me-1"></i>
+
+                    Excel
+
+                </a>
+
+
+                <!-- Print -->
+
+                <a
+                    href="{% url 'financial_analytics_print' %}"
+                    target="_blank"
+                    class="btn btn-primary"
+                >
+
+                    <i class="bi bi-printer me-1"></i>
+
+                    Print
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Financial Summary Cards
+    ========================================== -->
+
+    <div class="row">
+
+
+        <!-- ======================================
+             Rent Collected
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-success text-white shadow border-0 h-100 analytics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-cash-stack display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Rent Collected
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ total_rent|default:0 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Pending Rent
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-warning text-dark shadow border-0 h-100 analytics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-hourglass-split display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Pending Rent
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ pending_rent|default:0 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Total Expenses
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-danger text-white shadow border-0 h-100 analytics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-wallet2 display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Expenses
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ total_expenses|default:0 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Net Income
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
+
+            <div
+                class="card bg-primary text-white shadow border-0 h-100 analytics-card"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-graph-up-arrow display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Net Income
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ net_income|default:0 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Financial Status
+    ========================================== -->
+
+    <div class="row mt-2 mb-2">
+
+        <div class="col-12">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="row text-center">
+
+
+                        <!-- ==================================
+                             Income
+                        =================================== -->
+
+                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+
+                            <h6 class="text-muted">
+
+                                Rent Collected
+
+                            </h6>
+
+                            <h4 class="text-success fw-bold">
+
+                                ₹ {{ total_rent|default:0 }}
+
+                            </h4>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             Expenses
+                        =================================== -->
+
+                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+
+                            <h6 class="text-muted">
+
+                                Total Expenses
+
+                            </h6>
+
+                            <h4 class="text-danger fw-bold">
+
+                                ₹ {{ total_expenses|default:0 }}
+
+                            </h4>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             Net Income
+                        =================================== -->
+
+                        <div class="col-12 col-md-4">
+
+                            <h6 class="text-muted">
+
+                                Net Income
+
+                            </h6>
+
+                            <h4
+                                class="
+                                    fw-bold
+                                    {% if net_income >= 0 %}
+                                        text-primary
+                                    {% else %}
+                                        text-danger
+                                    {% endif %}
+                                "
+                            >
+
+                                ₹ {{ net_income|default:0 }}
+
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Charts
+    ========================================== -->
+
+    <div class="row mt-4">
+
+
+        <!-- ======================================
+             Income vs Expense
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-4">
+
+            <div class="card shadow border-0 chart-card">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-pie-chart-fill me-2"></i>
+
+                        Income vs Expense
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="chart-container">
+
+                        <canvas id="financeChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Monthly Financial Trend
+        ======================================= -->
+
+        <div class="col-12 col-lg-6 mb-4">
+
+            <div class="card shadow border-0 chart-card">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-graph-up me-2"></i>
+
+                        Monthly Financial Trend
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="chart-container">
+
+                        <canvas id="monthlyFinanceChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* ==========================================
+           Income vs Expense Doughnut Chart
+        ========================================== */
+
+        const financeCanvas =
+            document.getElementById(
+                "financeChart"
+            );
+
+
+        if (financeCanvas) {
+
+            new Chart(
+                financeCanvas,
+                {
+
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: [
+
+                            "Rent Collected",
+
+                            "Expenses"
+
+                        ],
+
+                        datasets: [{
+
+                            data: [
+
+                                {{ total_rent|default:0 }},
+
+                                {{ total_expenses|default:0 }}
+
+                            ],
+
+                            backgroundColor: [
+
+                                "#198754",
+
+                                "#dc3545"
+
+                            ],
+
+                            borderWidth: 2
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: "bottom"
+
+                            }
+
+                        },
+
+                        cutout: "65%"
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ==========================================
+           Monthly Financial Trend
+        ========================================== */
+
+        const monthlyFinanceCanvas =
+            document.getElementById(
+                "monthlyFinanceChart"
+            );
+
+
+        if (monthlyFinanceCanvas) {
+
+
+            const months = [
+
+                "Jan",
+
+                "Feb",
+
+                "Mar",
+
+                "Apr",
+
+                "May",
+
+                "Jun",
+
+                "Jul",
+
+                "Aug",
+
+                "Sep",
+
+                "Oct",
+
+                "Nov",
+
+                "Dec"
+
+            ];
+
+
+            const incomeData =
+                Array(12).fill(0);
+
+
+            const expenseData =
+                Array(12).fill(0);
+
+
+            /* ======================================
+               Monthly Income
+            ====================================== */
+
+            {% for item in monthly_income %}
+
+            incomeData[
+                {{ item.payment_month }} - 1
+            ] = {{ item.total|default:0 }};
+
+            {% endfor %}
+
+
+            /* ======================================
+               Monthly Expenses
+            ====================================== */
+
+            {% for item in monthly_expense %}
+
+            expenseData[
+                {{ item.expense_month }} - 1
+            ] = {{ item.total|default:0 }};
+
+            {% endfor %}
+
+
+            /* ======================================
+               Monthly Line Chart
+            ====================================== */
+
+            new Chart(
+                monthlyFinanceCanvas,
+                {
+
+                    type: "line",
+
+                    data: {
+
+                        labels: months,
+
+                        datasets: [
+
+                            {
+
+                                label: "Income",
+
+                                data: incomeData,
+
+                                borderColor:
+                                    "#198754",
+
+                                backgroundColor:
+                                    "rgba(25, 135, 84, 0.15)",
+
+                                fill: true,
+
+                                tension: 0.4,
+
+                                borderWidth: 3,
+
+                                pointRadius: 4,
+
+                                pointHoverRadius: 6
+
+                            },
+
+                            {
+
+                                label: "Expense",
+
+                                data: expenseData,
+
+                                borderColor:
+                                    "#dc3545",
+
+                                backgroundColor:
+                                    "rgba(220, 53, 69, 0.15)",
+
+                                fill: true,
+
+                                tension: 0.4,
+
+                                borderWidth: 3,
+
+                                pointRadius: 4,
+
+                                pointHoverRadius: 6
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        interaction: {
+
+                            mode: "index",
+
+                            intersect: false
+
+                        },
+
+                        plugins: {
+
+                            legend: {
+
+                                display: true,
+
+                                position: "bottom"
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+
+                                    precision: 0
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

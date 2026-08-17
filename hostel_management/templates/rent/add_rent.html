@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-success text-white">
+
+                    <h4 class="mb-0">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                        Add Rent Payment
+
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {% if messages %}
+
+                            {% for message in messages %}
+
+                                <div class="alert alert-{{ message.tags }}">
+
+                                    {{ message }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                        {{ form.non_field_errors }}
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Student
+
+                                </label>
+
+                                {{ form.student }}
+
+                                {{ form.student.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Month
+
+                                </label>
+
+                                {{ form.month }}
+
+                                {{ form.month.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Year
+
+                                </label>
+
+                                {{ form.year }}
+
+                                {{ form.year.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Monthly Rent
+
+                                </label>
+
+                                {{ form.monthly_rent }}
+
+                                {{ form.monthly_rent.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Late Fine
+
+                                </label>
+
+                                {{ form.late_fine }}
+
+                                {{ form.late_fine.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Paid Amount
+
+                                </label>
+
+                                {{ form.paid_amount }}
+
+                                {{ form.paid_amount.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Payment Date
+
+                                </label>
+
+                                {{ form.payment_date }}
+
+                                {{ form.payment_date.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Payment Mode
+
+                                </label>
+
+                                {{ form.payment_mode }}
+
+                                {{ form.payment_mode.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Transaction ID
+
+                                </label>
+
+                                {{ form.transaction_id }}
+
+                                {{ form.transaction_id.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Collected By
+
+                                </label>
+
+                                {{ form.collected_by }}
+
+                                {{ form.collected_by.errors }}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+
+                                    Status
+
+                                </label>
+
+                                {{ form.status }}
+
+                                {{ form.status.errors }}
+
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+
+                                <label class="form-label">
+
+                                    Remarks
+
+                                </label>
+
+                                {{ form.remarks }}
+
+                                {{ form.remarks.errors }}
+
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                Save Payment
+
+                            </button>
+
+                            <a href="{% url 'rent_list' %}"
+                               class="btn btn-secondary">
+
+                                Cancel
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

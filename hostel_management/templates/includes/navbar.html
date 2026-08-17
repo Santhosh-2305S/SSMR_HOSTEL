@@ -1,0 +1,130 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top py-3">
+
+    <div class="container-fluid">
+
+        <!-- Left -->
+
+        <div class="d-flex align-items-center">
+
+            <!-- Mobile Menu -->
+
+            <button
+                class="btn btn-outline-primary d-lg-none me-3"
+                id="menuToggle">
+
+                <i class="bi bi-list fs-4"></i>
+
+            </button>
+
+            <div>
+
+                <h3 class="fw-bold mb-0">
+
+                    <i class="bi bi-speedometer2 text-primary"></i>
+
+                    Dashboard
+
+                </h3>
+
+                <small class="text-muted">
+
+                    <i class="bi bi-calendar-event"></i>
+
+                    <span id="liveDateTime"></span>
+
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- Right -->
+
+        <div class="d-flex align-items-center">
+
+            <!-- Notification -->
+
+            <button
+                class="btn btn-light rounded-circle me-3">
+
+                <i class="bi bi-bell fs-5"></i>
+
+            </button>
+
+            <!-- Welcome -->
+
+            <span class="me-3 d-none d-md-block">
+
+                Welcome,
+
+                <strong>{{ request.user.username }}</strong>
+
+            </span>
+
+            <!-- User -->
+
+            <div class="dropdown">
+
+                <button
+                    class="btn btn-light rounded-pill dropdown-toggle"
+                    data-bs-toggle="dropdown">
+
+                    <i class="bi bi-person-circle me-2"></i>
+
+                    {{ request.user.username }}
+
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+
+                    <li>
+
+                        <a class="dropdown-item"
+                           href="{% url 'profile' %}">
+
+                            <i class="bi bi-person"></i>
+
+                            Profile
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a class="dropdown-item"
+                           href="{% url 'change_password' %}">
+
+                            <i class="bi bi-key"></i>
+
+                            Change Password
+
+                        </a>
+
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+
+                        <a
+                           class="dropdown-item text-danger"
+                           href="{% url 'logout' %}">
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                            Logout
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

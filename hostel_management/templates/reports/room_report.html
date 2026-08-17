@@ -1,0 +1,896 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Room Report
+    ========================================== */
+
+    .report-card {
+
+        transition: transform 0.2s ease;
+
+    }
+
+    .report-card:hover {
+
+        transform: translateY(-3px);
+
+    }
+
+
+    /* ==========================================
+       Room Table
+    ========================================== */
+
+    .room-table th,
+    .room-table td {
+
+        vertical-align: middle;
+
+        white-space: nowrap;
+
+    }
+
+    .room-table tbody tr:hover {
+
+        background-color: rgba(13, 110, 253, 0.05);
+
+    }
+
+
+    /* ==========================================
+       Occupancy Progress
+    ========================================== */
+
+    .occupancy-progress {
+
+        min-width: 120px;
+
+    }
+
+
+    /* ==========================================
+       Report Actions
+    ========================================== */
+
+    .report-actions {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 10px;
+
+    }
+
+    .report-actions .btn {
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ==========================================
+       Overall Occupancy
+    ========================================== */
+
+    .occupancy-summary {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 15px;
+
+    }
+
+
+    /* ==========================================
+       Legend
+    ========================================== */
+
+    .legend-item {
+
+        padding: 5px;
+
+    }
+
+
+    /* ==========================================
+       Print Styling
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .container-fluid,
+        .container {
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .room-table {
+
+            font-size: 11px;
+
+        }
+
+        .progress-bar {
+
+            -webkit-print-color-adjust: exact !important;
+
+            print-color-adjust: exact !important;
+
+        }
+
+        .report-card {
+
+            transform: none !important;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+
+        /* --------------------------------------
+           Page Header
+        -------------------------------------- */
+
+        .report-header {
+
+            flex-direction: column;
+
+            align-items: flex-start !important;
+
+            gap: 15px;
+
+        }
+
+        .report-header > div {
+
+            width: 100%;
+
+        }
+
+
+        /* --------------------------------------
+           Report Actions
+        -------------------------------------- */
+
+        .report-actions {
+
+            width: 100%;
+
+        }
+
+        .report-actions .btn {
+
+            width: 100%;
+
+        }
+
+
+        /* --------------------------------------
+           Summary Cards
+        -------------------------------------- */
+
+        .summary-card {
+
+            width: 100%;
+
+        }
+
+        .report-card .card-body {
+
+            padding: 20px 15px;
+
+        }
+
+
+        /* --------------------------------------
+           Occupancy Summary
+        -------------------------------------- */
+
+        .occupancy-summary {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+        }
+
+
+        /* --------------------------------------
+           Room Table
+        -------------------------------------- */
+
+        .room-table {
+
+            min-width: 900px;
+
+        }
+
+        .table-responsive {
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+
+        /* --------------------------------------
+           Occupancy Progress
+        -------------------------------------- */
+
+        .occupancy-progress {
+
+            min-width: 120px;
+
+        }
+
+
+        /* --------------------------------------
+           Legend
+        -------------------------------------- */
+
+        .legend-item {
+
+            margin-bottom: 10px;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid mt-4">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div
+        class="d-flex justify-content-between align-items-center mb-4 report-header"
+    >
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-building-fill text-primary me-2"></i>
+
+                Room Vacancy Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Room, bed and occupancy overview
+
+            </p>
+
+        </div>
+
+
+        <!-- ======================================
+             Report Actions
+        ======================================= -->
+
+        <div class="no-print report-actions">
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="btn btn-primary"
+            >
+
+                <i class="bi bi-printer me-1"></i>
+
+                Print Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Summary Cards
+    ========================================== -->
+
+    <div class="row mb-4">
+
+
+        <!-- ======================================
+             Total Rooms
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 summary-card">
+
+            <div
+                class="card bg-primary text-white shadow border-0 report-card h-100"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-building-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Rooms
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ total_rooms|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Total Beds
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 summary-card">
+
+            <div
+                class="card bg-success text-white shadow border-0 report-card h-100"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-grid-3x3-gap-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Beds
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ total_beds|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Occupied Beds
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 summary-card">
+
+            <div
+                class="card bg-warning text-dark shadow border-0 report-card h-100"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-check-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Occupied Beds
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ occupied_beds|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             Vacant Beds
+        ======================================= -->
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 summary-card">
+
+            <div
+                class="card bg-info text-white shadow border-0 report-card h-100"
+            >
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-bed-fill display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Vacant Beds
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ vacant_beds|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Overall Occupancy
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-body">
+
+            <div class="occupancy-summary mb-2">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+
+                    Overall Bed Occupancy
+
+                </h5>
+
+                <span class="badge bg-primary">
+
+                    {{ occupied_beds|default:0 }}
+
+                    /
+
+                    {{ total_beds|default:0 }}
+
+                </span>
+
+            </div>
+
+
+            {% if total_beds > 0 %}
+
+                <div
+                    class="progress"
+                    style="height: 25px;"
+                >
+
+                    <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: {% widthratio occupied_beds total_beds 100 %}%;"
+                    >
+
+                        {% widthratio occupied_beds total_beds 100 %}%
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div
+                    class="progress"
+                    style="height: 25px;"
+                >
+
+                    <div
+                        class="progress-bar bg-secondary"
+                        role="progressbar"
+                        style="width: 0%;"
+                    >
+
+                        0%
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Room-wise Occupancy
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-door-open-fill me-2"></i>
+
+                Room-wise Occupancy
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-bordered table-hover mb-0 room-table"
+                >
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Room</th>
+
+                            <th>Type</th>
+
+                            <th>Sharing</th>
+
+                            <th>Total Beds</th>
+
+                            <th>Occupied</th>
+
+                            <th>Vacant</th>
+
+                            <th>Occupancy</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for room in rooms %}
+
+                        <tr>
+
+
+                            <!-- ==================================
+                                 Number
+                            =================================== -->
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Room
+                            =================================== -->
+
+                            <td>
+
+                                <span class="badge bg-primary fs-6">
+
+                                    {{ room.room_number }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Room Type
+                            =================================== -->
+
+                            <td>
+
+                                {{ room.room_type }}
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Sharing
+                            =================================== -->
+
+                            <td>
+
+                                {{ room.sharing_type }}
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Total Beds
+                            =================================== -->
+
+                            <td>
+
+                                <strong>
+
+                                    {{ room.total_beds }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Occupied
+                            =================================== -->
+
+                            <td>
+
+                                {% if room.occupied > 0 %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        {{ room.occupied }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        0
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Vacant
+                            =================================== -->
+
+                            <td>
+
+                                {% if room.available_beds > 0 %}
+
+                                    <span class="badge bg-success">
+
+                                        {{ room.available_beds }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        0
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ==================================
+                                 Occupancy
+                            =================================== -->
+
+                            <td>
+
+                                <div class="occupancy-progress">
+
+                                    {% if room.total_beds > 0 %}
+
+                                        {% widthratio room.occupied room.total_beds 100 as occupancy %}
+
+                                        <div
+                                            class="progress"
+                                            style="height: 20px;"
+                                        >
+
+                                            <div
+                                                class="progress-bar bg-success"
+                                                role="progressbar"
+                                                style="width: {{ occupancy }}%;"
+                                            >
+
+                                                {{ occupancy }}%
+
+                                            </div>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div
+                                            class="progress"
+                                            style="height: 20px;"
+                                        >
+
+                                            <div
+                                                class="progress-bar bg-secondary"
+                                                role="progressbar"
+                                                style="width: 0%;"
+                                            >
+
+                                                0%
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="text-center py-5"
+                            >
+
+                                <i
+                                    class="bi bi-building-x display-6 text-muted"
+                                ></i>
+
+                                <p class="text-muted mt-2 mb-0">
+
+                                    No rooms found.
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Legend
+    ========================================== -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+
+                <!-- ======================================
+                     Vacant
+                ======================================= -->
+
+                <div class="col-12 col-md-4 mb-2 legend-item">
+
+                    <span class="badge bg-success me-1">
+
+                        Vacant
+
+                    </span>
+
+                    Beds available for allocation
+
+                </div>
+
+
+                <!-- ======================================
+                     Occupied
+                ======================================= -->
+
+                <div class="col-12 col-md-4 mb-2 legend-item">
+
+                    <span class="badge bg-warning text-dark me-1">
+
+                        Occupied
+
+                    </span>
+
+                    Beds currently occupied
+
+                </div>
+
+
+                <!-- ======================================
+                     Occupancy
+                ======================================= -->
+
+                <div class="col-12 col-md-4 mb-2 legend-item">
+
+                    <span class="badge bg-primary me-1">
+
+                        Occupancy %
+
+                    </span>
+
+                    Room utilization
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

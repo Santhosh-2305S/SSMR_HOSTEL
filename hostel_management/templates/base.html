@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SSMR MENS PG Hostel Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+
+{% if request.user.is_authenticated %}
+
+    <!-- Sidebar -->
+    {% include 'includes/sidebar.html' %}
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Navbar -->
+        {% include 'includes/navbar.html' %}
+
+{% endif %}
+
+<!-- ===========================
+     Main Container
+=========================== -->
+
+<div class="container-fluid py-4">
+
+    <!-- Toast Messages -->
+
+    <div class="toast-container position-fixed top-0 end-0 p-3"
+         style="z-index:1100;">
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+            <div class="toast autoToast text-bg-{{ message.tags }} border-0"
+                 role="alert">
+
+                <div class="d-flex">
+
+                    <div class="toast-body">
+
+                        {% if message.tags == "success" %}
+
+                            <i class="bi bi-check-circle-fill me-2"></i>
+
+                        {% elif message.tags == "error" %}
+
+                            <i class="bi bi-x-circle-fill me-2"></i>
+
+                        {% elif message.tags == "warning" %}
+
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                        {% else %}
+
+                            <i class="bi bi-info-circle-fill me-2"></i>
+
+                        {% endif %}
+
+                        {{ message }}
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast">
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+    <!-- Page Content -->
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<!-- ===========================
+     Footer
+=========================== -->
+
+<footer class="footer">
+
+    <div class="container-fluid">
+
+        <div class="row align-items-center text-center">
+
+            <div class="col-lg-4 mb-2">
+
+                <strong>
+
+                    © <span id="currentYear"></span>
+
+                    SSMR MENS PG
+
+                </strong>
+
+            </div>
+
+            <div class="col-lg-4 mb-2">
+
+                Hostel Management System
+
+                <br>
+
+                <small>
+
+                    Version 2.0
+
+                </small>
+
+            </div>
+
+            <div class="col-lg-4 mb-2">
+
+                Developed by
+
+                <br>
+
+                <strong>
+
+                    Santhosh Muthuraj
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+{% if request.user.is_authenticated %}
+
+    </div>
+
+{% endif %}
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Custom JS -->
+<script src="{% static 'js/script.js' %}"></script>
+
+{% block scripts %}
+{% endblock %}
+
+</body>
+
+</html>

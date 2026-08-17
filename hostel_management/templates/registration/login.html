@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SSMR MENS PG Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+
+        body{
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+
+            font-family:Arial,Helvetica,sans-serif;
+
+        }
+
+        .login-card{
+
+            width:100%;
+
+            max-width:420px;
+
+            border:none;
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+            box-shadow:0 20px 50px rgba(0,0,0,.30);
+
+            animation:fadeIn .8s ease;
+
+        }
+
+        .login-header{
+
+            background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+            color:#fff;
+
+            text-align:center;
+
+            padding:30px;
+
+        }
+
+        .login-header i{
+
+            font-size:55px;
+
+        }
+
+        .login-header h2{
+
+            margin-top:10px;
+
+            font-weight:bold;
+
+        }
+
+        .login-body{
+
+            padding:30px;
+
+            background:#fff;
+
+        }
+
+        .input-group-text{
+
+            background:#2563eb;
+
+            color:#fff;
+
+            border:none;
+
+        }
+
+        .form-control{
+
+            height:50px;
+
+        }
+
+        .btn-login{
+
+            height:50px;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            border-radius:10px;
+
+            transition:.3s;
+
+        }
+
+        .btn-login:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:0 10px 20px rgba(37,99,235,.30);
+
+        }
+
+        @keyframes fadeIn{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(-30px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-5 col-md-7 col-sm-10">
+
+            <div class="card login-card">
+
+                <div class="login-header">
+
+                    <i class="bi bi-buildings-fill"></i>
+
+                    <h2>SSMR MENS PG</h2>
+
+                    <p class="mb-0">
+
+                        Hostel Management System
+
+                    </p>
+
+                </div>
+
+                <div class="login-body">
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="alert alert-danger">
+
+                                {{ message }}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Username
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="bi bi-person-fill"></i>
+
+                                </span>
+
+                                <input
+                                    type="text"
+                                    name="username"
+                                    class="form-control"
+                                    placeholder="Enter Username"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+
+                                Password
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="bi bi-lock-fill"></i>
+
+                                </span>
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    class="form-control"
+                                    placeholder="Enter Password"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-login w-100">
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+
+                            Login
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

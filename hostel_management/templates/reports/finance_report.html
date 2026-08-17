@@ -1,0 +1,536 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Financial Report Styling
+    ========================================== */
+
+    .finance-card {
+
+        transition: transform 0.2s ease,
+                    box-shadow 0.2s ease;
+
+    }
+
+    .finance-card:hover {
+
+        transform: translateY(-3px);
+
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+
+    .summary-table th,
+    .summary-table td {
+
+        vertical-align: middle;
+
+    }
+
+
+    /* ==========================================
+       Print Styling
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .container-fluid,
+        .container {
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+        .finance-header {
+
+            flex-direction: column;
+
+            align-items: flex-start !important;
+
+            gap: 10px;
+
+        }
+
+        .finance-header .btn {
+
+            width: 100%;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid mt-4">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4 finance-header">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+
+                Financial Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Hostel income, expenses and financial performance
+
+            </p>
+
+        </div>
+
+
+        <div class="no-print">
+
+            <button onclick="window.print()"
+                    class="btn btn-primary">
+
+                <i class="bi bi-printer me-1"></i>
+
+                Print Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Financial Cards
+    ========================================== -->
+
+    <div class="row">
+
+
+        <!-- Total Income -->
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-success text-white shadow border-0 finance-card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-cash-stack display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Income
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ total_income|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Total Expenses -->
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-danger text-white shadow border-0 finance-card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-wallet2 display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Expenses
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ total_expense|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Pending Rent -->
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-warning text-dark shadow border-0 finance-card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-hourglass-split display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Pending Rent
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ pending_rent|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Net Profit -->
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="card bg-primary text-white shadow border-0 finance-card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-graph-up display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Net Profit
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ net_profit|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Income vs Expense
+    ========================================== -->
+
+    <div class="card shadow border-0 mt-4 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-bar-chart-fill me-2"></i>
+
+                Income vs Expense
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+
+                <!-- Income -->
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-4">
+
+                        <i class="bi bi-arrow-down-circle-fill text-success fs-1"></i>
+
+                        <h6 class="mt-2">
+
+                            Income
+
+                        </h6>
+
+                        <h3 class="text-success fw-bold">
+
+                            ₹ {{ total_income|default:0 }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Expense -->
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-4">
+
+                        <i class="bi bi-arrow-up-circle-fill text-danger fs-1"></i>
+
+                        <h6 class="mt-2">
+
+                            Expense
+
+                        </h6>
+
+                        <h3 class="text-danger fw-bold">
+
+                            ₹ {{ total_expense|default:0 }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Profit -->
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-4">
+
+                        <i class="bi bi-graph-up-arrow text-primary fs-1"></i>
+
+                        <h6 class="mt-2">
+
+                            Net Profit
+
+                        </h6>
+
+                        <h3 class="text-primary fw-bold">
+
+                            ₹ {{ net_profit|default:0 }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Financial Summary
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-file-earmark-bar-graph me-2"></i>
+
+                Financial Summary
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered summary-table mb-0">
+
+                    <tbody>
+
+                        <tr>
+
+                            <th>
+
+                                <i class="bi bi-cash-stack text-success me-2"></i>
+
+                                Total Rent Collected
+
+                            </th>
+
+                            <td class="text-end fw-bold text-success">
+
+                                ₹ {{ total_income|default:0 }}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th>
+
+                                <i class="bi bi-wallet2 text-danger me-2"></i>
+
+                                Total Hostel Expenses
+
+                            </th>
+
+                            <td class="text-end fw-bold text-danger">
+
+                                ₹ {{ total_expense|default:0 }}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th>
+
+                                <i class="bi bi-hourglass-split text-warning me-2"></i>
+
+                                Pending Rent
+
+                            </th>
+
+                            <td class="text-end fw-bold text-warning">
+
+                                ₹ {{ pending_rent|default:0 }}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr class="table-success">
+
+                            <th>
+
+                                <i class="bi bi-graph-up-arrow me-2"></i>
+
+                                Net Profit
+
+                            </th>
+
+                            <th class="text-end">
+
+                                ₹ {{ net_profit|default:0 }}
+
+                            </th>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Financial Status
+    ========================================== -->
+
+    <div class="alert
+        {% if net_profit > 0 %}
+            alert-success
+        {% elif net_profit < 0 %}
+            alert-danger
+        {% else %}
+            alert-warning
+        {% endif %}
+        border-0 shadow-sm">
+
+        {% if net_profit > 0 %}
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            <strong>Positive Financial Result:</strong>
+
+            The hostel currently has a positive net profit.
+
+        {% elif net_profit < 0 %}
+
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+            <strong>Attention:</strong>
+
+            Hostel expenses are currently higher than income.
+
+        {% else %}
+
+            <i class="bi bi-dash-circle-fill me-2"></i>
+
+            <strong>Break-even:</strong>
+
+            Income and expenses are currently equal.
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+{% endblock %}

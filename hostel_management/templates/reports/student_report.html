@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Student Report</h2>
+
+        <button onclick="window.print()"
+                class="btn btn-primary">
+            🖨 Print Report
+        </button>
+    </div>
+
+    <!-- Download PDF Button -->
+    <a href="{% url 'student_report_pdf' %}"
+       class="btn btn-danger mb-3">
+        <i class="bi bi-file-earmark-pdf"></i>
+        Download PDF
+    </a>
+
+    <br>
+
+    <!-- Download Excel Button -->
+    <a href="{% url 'student_report_excel' %}"
+       class="btn btn-success mb-3">
+        <i class="bi bi-file-earmark-excel"></i>
+        Download Excel
+    </a>
+
+    <br>
+
+    <!-- Print Report Button -->
+    <a href="{% url 'student_report_print' %}"
+       target="_blank"
+       class="btn btn-primary mb-3">
+        <i class="bi bi-printer"></i>
+        Print Report
+    </a>
+
+    <form method="GET" class="mb-3">
+        <div class="input-group">
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Search Student..."
+                value="{{ request.GET.search }}">
+
+            <button class="btn btn-success">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Room</th>
+                <th>Bed</th>
+                <th>College / Workplace</th>
+                <th>Food</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>
+                    {% if student.photo %}
+                        <img
+                            src="{{ student.photo.url }}"
+                            width="60"
+                            height="60"
+                            class="rounded-circle">
+                    {% else %}
+                        No Photo
+                    {% endif %}
+                </td>
+
+                <td>{{ student.name }}</td>
+                <td>{{ student.phone }}</td>
+                <td>{{ student.room.room_number }}</td>
+                <td>{{ student.bed.bed_number }}</td>
+                <td>{{ student.college }}</td>
+                <td>{{ student.food_type }}</td>
+
+                <td>
+                    {% if student.status == 'Active' %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-danger">Left</span>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">
+                    No Students Found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

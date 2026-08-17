@@ -1,0 +1,574 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Expense Report Styling
+    ========================================== */
+
+    .expense-card {
+
+        transition: transform 0.2s ease,
+                    box-shadow 0.2s ease;
+
+    }
+
+    .expense-card:hover {
+
+        transform: translateY(-3px);
+
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+
+    .expense-table th,
+    .expense-table td {
+
+        vertical-align: middle;
+
+        white-space: nowrap;
+
+    }
+
+
+    .expense-table tbody tr:hover {
+
+        background-color: rgba(220, 53, 69, 0.05);
+
+    }
+
+
+    /* ==========================================
+       Print Styling
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .container-fluid,
+        .container {
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+        .expense-table {
+
+            font-size: 11px;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Mobile Responsive
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+        .expense-table {
+
+            min-width: 800px;
+
+        }
+
+        .table-responsive {
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+        .expense-header {
+
+            flex-direction: column;
+
+            align-items: flex-start !important;
+
+            gap: 10px;
+
+        }
+
+        .expense-header .btn {
+
+            width: 100%;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid mt-4">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4 expense-header">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-wallet2 text-danger me-2"></i>
+
+                Expense Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Track hostel expenses and payment details
+
+            </p>
+
+        </div>
+
+
+        <div class="no-print">
+
+            <button onclick="window.print()"
+                    class="btn btn-primary">
+
+                <i class="bi bi-printer me-1"></i>
+
+                Print Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Search
+    ========================================== -->
+
+    <div class="card shadow-sm border-0 mb-4 no-print">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+
+                        <i class="bi bi-search"></i>
+
+                    </span>
+
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search Category..."
+                        value="{{ request.GET.search|default:'' }}">
+
+
+                    <button class="btn btn-success"
+                            type="submit">
+
+                        <i class="bi bi-search me-1"></i>
+
+                        Search
+
+                    </button>
+
+
+                    {% if request.GET.search %}
+
+                    <a href="{% url 'expense_report' %}"
+                       class="btn btn-secondary">
+
+                        <i class="bi bi-x-circle me-1"></i>
+
+                        Clear
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Total Expense
+    ========================================== -->
+
+    <div class="row mb-4">
+
+        <div class="col-lg-12">
+
+            <div class="card bg-danger text-white shadow border-0 expense-card">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-cash-stack display-6"></i>
+
+                    <h6 class="mt-2">
+
+                        Total Expenses
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        ₹ {{ total_expense|default:0 }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Expense Records
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-receipt-cutoff me-2"></i>
+
+                Expense Records
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover mb-0 expense-table">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Receipt</th>
+
+                            <th>Date</th>
+
+                            <th>Category</th>
+
+                            <th>Amount</th>
+
+                            <th>Payment Mode</th>
+
+                            <th>Paid To</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for expense in expenses %}
+
+                        <tr>
+
+
+                            <!-- Number -->
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+
+                            <!-- Receipt -->
+
+                            <td>
+
+                                {% if expense.receipt_number %}
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ expense.receipt_number }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Date -->
+
+                            <td>
+
+                                {{ expense.expense_date }}
+
+                            </td>
+
+
+                            <!-- Category -->
+
+                            <td>
+
+                                <strong>
+
+                                    {{ expense.category }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- Amount -->
+
+                            <td>
+
+                                <span class="fw-bold text-danger">
+
+                                    ₹ {{ expense.amount|default:0 }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- Payment Mode -->
+
+                            <td>
+
+                                {{ expense.payment_mode|default:"-" }}
+
+                            </td>
+
+
+                            <!-- Paid To -->
+
+                            <td>
+
+                                {{ expense.paid_to|default:"-" }}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5">
+
+                                <i class="bi bi-wallet2 display-6 text-muted"></i>
+
+                                <p class="text-muted mt-2 mb-0">
+
+                                    No Expense Records Found
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Pagination
+    ========================================== -->
+
+    {% if expenses.has_other_pages %}
+
+    <nav aria-label="Expense report pagination"
+         class="no-print">
+
+        <ul class="pagination justify-content-center">
+
+
+            <!-- Previous -->
+
+            {% if expenses.has_previous %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ expenses.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search|urlencode }}{% endif %}">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                    Previous
+
+                </span>
+
+            </li>
+
+            {% endif %}
+
+
+            <!-- Current Page -->
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    Page {{ expenses.number }}
+
+                    of {{ expenses.paginator.num_pages }}
+
+                </span>
+
+            </li>
+
+
+            <!-- Next -->
+
+            {% if expenses.has_next %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ expenses.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search|urlencode }}{% endif %}">
+
+                    Next
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+
+                    Next
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </span>
+
+            </li>
+
+            {% endif %}
+
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+
+    <!-- ==========================================
+         Report Information
+    ========================================== -->
+
+    <div class="text-center text-muted mb-4">
+
+        <small>
+
+            {% if expenses.paginator.count %}
+
+                Showing page {{ expenses.number }}
+                of {{ expenses.paginator.num_pages }}
+                —
+                {{ expenses.paginator.count }} total expense records
+
+            {% else %}
+
+                No expense records available
+
+            {% endif %}
+
+        </small>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

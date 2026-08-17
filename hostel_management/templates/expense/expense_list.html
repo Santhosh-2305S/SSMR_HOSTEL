@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+
+    <div class="row align-items-center mb-4">
+
+        <div class="col-lg-6 col-md-6 col-12">
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-wallet2 text-danger"></i>
+
+                Expense Management
+
+            </h2>
+
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-12 text-md-end mt-3 mt-md-0">
+
+            <a href="{% url 'add_expense' %}"
+               class="btn btn-success">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Add Expense
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Search -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    <div class="col-lg-10 col-md-9 col-12">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search Category..."
+                            value="{{ request.GET.search }}">
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-3 col-12 d-grid">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            <i class="bi bi-search"></i>
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Expense Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Receipt No</th>
+
+                            <th>Date</th>
+
+                            <th>Category</th>
+
+                            <th>Amount</th>
+
+                            <th>Payment Mode</th>
+
+                            <th>Paid To</th>
+
+                            <th width="170">
+
+                                Action
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for expense in expenses %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+
+                                    {{ expense.receipt_number }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {{ expense.expense_date }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+
+                                    {{ expense.category }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="fw-bold text-danger">
+
+                                    ₹ {{ expense.amount }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-info text-dark">
+
+                                    {{ expense.payment_mode }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {{ expense.paid_to }}
+
+                            </td>
+
+                            <td>
+
+                                <div class="d-flex flex-wrap gap-1">
+
+                                    <a href="{% url 'edit_expense' expense.id %}"
+                                       class="btn btn-warning btn-sm"
+                                       title="Edit">
+
+                                        <i class="bi bi-pencil-fill"></i>
+
+                                    </a>
+
+                                    <a href="{% url 'delete_expense' expense.id %}"
+                                       class="btn btn-danger btn-sm"
+                                       title="Delete"
+                                       onclick="return confirm('Delete this expense?');">
+
+                                        <i class="bi bi-trash-fill"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center text-danger py-4">
+
+                                <i class="bi bi-exclamation-circle"></i>
+
+                                No Expense Records Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

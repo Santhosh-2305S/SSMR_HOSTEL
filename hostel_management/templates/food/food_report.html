@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================
+       Food Report Styling
+    ========================================== */
+
+    .food-card {
+
+        transition: transform 0.2s ease,
+                    box-shadow 0.2s ease;
+
+    }
+
+    .food-card:hover {
+
+        transform: translateY(-4px);
+
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+
+    }
+
+
+    .food-icon {
+
+        font-size: 42px;
+
+    }
+
+
+    /* ==========================================
+       Print Styling
+    ========================================== */
+
+    @media print {
+
+        .no-print {
+
+            display: none !important;
+
+        }
+
+        body {
+
+            background: #ffffff !important;
+
+        }
+
+        .container-fluid,
+        .container {
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+        }
+
+        .card {
+
+            box-shadow: none !important;
+
+            border: 1px solid #dee2e6 !important;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       Mobile
+    ========================================== */
+
+    @media (max-width: 767.98px) {
+
+        .food-header {
+
+            flex-direction: column;
+
+            align-items: flex-start !important;
+
+            gap: 10px;
+
+        }
+
+        .food-header .btn {
+
+            width: 100%;
+
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid mt-4">
+
+
+    <!-- ==========================================
+         Page Header
+    ========================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4 food-header">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-egg-fried text-warning me-2"></i>
+
+                Daily Food Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Daily meal requirement overview
+
+            </p>
+
+        </div>
+
+
+        <div class="no-print">
+
+            <button onclick="window.print()"
+                    class="btn btn-primary">
+
+                <i class="bi bi-printer me-1"></i>
+
+                Print Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Meal Summary Cards
+    ========================================== -->
+
+    <div class="row mb-4">
+
+
+        <!-- Breakfast -->
+
+        <div class="col-lg-4 col-md-4 mb-3">
+
+            <div class="card bg-warning text-dark shadow border-0 food-card h-100">
+
+                <div class="card-body text-center">
+
+                    <div class="food-icon mb-2">
+
+                        🍳
+
+                    </div>
+
+                    <h6 class="text-uppercase">
+
+                        Breakfast
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ breakfast|default:0 }}
+
+                    </h2>
+
+                    <p class="mb-0">
+
+                        Meals Required
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Lunch -->
+
+        <div class="col-lg-4 col-md-4 mb-3">
+
+            <div class="card bg-success text-white shadow border-0 food-card h-100">
+
+                <div class="card-body text-center">
+
+                    <div class="food-icon mb-2">
+
+                        🍛
+
+                    </div>
+
+                    <h6 class="text-uppercase">
+
+                        Lunch
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ lunch|default:0 }}
+
+                    </h2>
+
+                    <p class="mb-0">
+
+                        Meals Required
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Dinner -->
+
+        <div class="col-lg-4 col-md-4 mb-3">
+
+            <div class="card bg-primary text-white shadow border-0 food-card h-100">
+
+                <div class="card-body text-center">
+
+                    <div class="food-icon mb-2">
+
+                        🍽️
+
+                    </div>
+
+                    <h6 class="text-uppercase">
+
+                        Dinner
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        {{ dinner|default:0 }}
+
+                    </h2>
+
+                    <p class="mb-0">
+
+                        Meals Required
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Food Summary
+    ========================================== -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-bar-chart-fill me-2"></i>
+
+                Food Summary
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-3">
+
+                        <i class="bi bi-sunrise-fill text-warning fs-2"></i>
+
+                        <h6 class="mt-2">
+
+                            Breakfast
+
+                        </h6>
+
+                        <h4 class="fw-bold">
+
+                            {{ breakfast|default:0 }}
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-3">
+
+                        <i class="bi bi-sun-fill text-success fs-2"></i>
+
+                        <h6 class="mt-2">
+
+                            Lunch
+
+                        </h6>
+
+                        <h4 class="fw-bold">
+
+                            {{ lunch|default:0 }}
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-3">
+
+                        <i class="bi bi-moon-stars-fill text-primary fs-2"></i>
+
+                        <h6 class="mt-2">
+
+                            Dinner
+
+                        </h6>
+
+                        <h4 class="fw-bold">
+
+                            {{ dinner|default:0 }}
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         Food Information
+    ========================================== -->
+
+    <div class="alert alert-info border-0 shadow-sm">
+
+        <i class="bi bi-info-circle-fill me-2"></i>
+
+        The meal counts above represent the number of food records
+        marked for each meal.
+
+    </div>
+
+
+</div>
+
+{% endblock %}

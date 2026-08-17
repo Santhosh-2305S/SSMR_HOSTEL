@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="row align-items-center mb-4">
+
+        <div class="col-lg-6 col-md-6 col-12">
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-cash-stack text-success"></i>
+
+                Rent Management
+
+            </h2>
+
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-12 text-md-end mt-3 mt-md-0">
+
+            <a href="{% url 'add_rent' %}" class="btn btn-success">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Add Payment
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Search Card -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    <div class="col-lg-10 col-md-9 col-12">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search Student..."
+                            value="{{ request.GET.search }}">
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-3 col-12 d-grid">
+
+                        <button type="submit" class="btn btn-primary">
+
+                            <i class="bi bi-search"></i>
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Receipt</th>
+                            <th>Student</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Pending</th>
+                            <th>Mode</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for rent in rents %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong>{{ rent.receipt_number }}</strong>
+
+                            </td>
+
+                            <td>{{ rent.student.name }}</td>
+
+                            <td>{{ rent.month }}</td>
+
+                            <td>{{ rent.year }}</td>
+
+                            <td class="fw-bold text-primary">
+
+                                ₹ {{ rent.total_amount }}
+
+                            </td>
+
+                            <td class="fw-bold text-success">
+
+                                ₹ {{ rent.paid_amount }}
+
+                            </td>
+
+                            <td class="fw-bold text-danger">
+
+                                ₹ {{ rent.pending_amount }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-info text-dark">
+
+                                    {{ rent.payment_mode }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {% if rent.status == "Paid" %}
+
+                                    <span class="badge bg-success">
+
+                                        Paid
+
+                                    </span>
+
+                                {% elif rent.status == "Partial" %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Partial
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Pending
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <div class="d-flex flex-wrap gap-1">
+
+                                    <a href="{% url 'payment_receipt' rent.id %}"
+                                       class="btn btn-info btn-sm">
+
+                                        <i class="bi bi-receipt"></i>
+
+                                    </a>
+
+                                    <a href="{% url 'edit_rent' rent.id %}"
+                                       class="btn btn-warning btn-sm">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+                                    <a href="{% url 'delete_rent' rent.id %}"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Delete this payment?');">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="10" class="text-center py-4 text-danger">
+
+                                <i class="bi bi-exclamation-circle"></i>
+
+                                No Rent Records Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pagination -->
+
+    {% if rents.paginator.num_pages > 1 %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            {% if rents.has_previous %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ rents.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    Page {{ rents.number }} of {{ rents.paginator.num_pages }}
+
+                </span>
+
+            </li>
+
+            {% if rents.has_next %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ rents.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

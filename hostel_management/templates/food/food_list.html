@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+
+    <div class="row align-items-center mb-4">
+
+        <div class="col-lg-6 col-md-6 col-12">
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-egg-fried text-success"></i>
+
+                Food Management
+
+            </h2>
+
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-12 text-md-end mt-3 mt-md-0">
+
+            <a href="{% url 'add_food' %}"
+               class="btn btn-success">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Add Food
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Search -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    <div class="col-lg-10 col-md-9 col-12">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search Student..."
+                            value="{{ request.GET.search }}">
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-3 col-12 d-grid">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            <i class="bi bi-search"></i>
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Food Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Student</th>
+
+                            <th>Date</th>
+
+                            <th>Food Type</th>
+
+                            <th>Breakfast</th>
+
+                            <th>Lunch</th>
+
+                            <th>Dinner</th>
+
+                            <th>Food Cost</th>
+
+                            <th width="170">
+
+                                Action
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for food in foods %}
+
+<tr>
+
+    <td>
+
+        <strong>{{ food.student.name }}</strong>
+
+    </td>
+
+    <td>
+
+        {{ food.date }}
+
+    </td>
+
+    <td>
+
+        {% if food.food_type == "Veg" %}
+
+            <span class="badge bg-success">
+
+                Veg
+
+            </span>
+
+        {% else %}
+
+            <span class="badge bg-warning text-dark">
+
+                Non Veg
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+    <td class="text-center">
+
+        {% if food.breakfast %}
+
+            ✅
+
+        {% else %}
+
+            ❌
+
+        {% endif %}
+
+    </td>
+
+    <td class="text-center">
+
+        {% if food.lunch %}
+
+            ✅
+
+        {% else %}
+
+            ❌
+
+        {% endif %}
+
+    </td>
+
+    <td class="text-center">
+
+        {% if food.dinner %}
+
+            ✅
+
+        {% else %}
+
+            ❌
+
+        {% endif %}
+
+    </td>
+
+    <td>
+
+        <span class="fw-bold text-primary">
+
+            ₹ {{ food.total_cost }}
+
+        </span>
+
+    </td>
+
+    <td>
+
+        <div class="d-flex flex-wrap gap-1">
+
+            <a href="{% url 'edit_food' food.id %}"
+               class="btn btn-warning btn-sm"
+               title="Edit">
+
+                <i class="bi bi-pencil-fill"></i>
+
+            </a>
+
+            <a href="{% url 'delete_food' food.id %}"
+               class="btn btn-danger btn-sm"
+               title="Delete"
+               onclick="return confirm('Delete this record?');">
+
+                <i class="bi bi-trash-fill"></i>
+
+            </a>
+
+        </div>
+
+    </td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+    <td colspan="8" class="text-center text-danger py-4">
+
+        <i class="bi bi-exclamation-circle"></i>
+
+        No Food Records Found
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

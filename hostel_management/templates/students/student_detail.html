@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>Student Profile</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if student.photo %}
+                <img src="{{ student.photo.url }}"
+                     width="150"
+                     class="mb-3 rounded">
+            {% endif %}
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th>Name</th>
+                    <td>{{ student.name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ student.phone }}</td>
+                </tr>
+
+                <tr>
+                    <th>Aadhaar</th>
+                    <td>{{ student.aadhaar }}</td>
+                </tr>
+
+                <tr>
+                    <th>College / Workplace</th>
+                    <td>{{ student.college }}</td>
+                </tr>
+
+                <tr>
+                    <th>Address</th>
+                    <td>{{ student.address }}</td>
+                </tr>
+
+                <tr>
+                    <th>Room</th>
+                    <td>{{ student.room.room_number }}</td>
+                </tr>
+
+                <tr>
+                    <th>Bed</th>
+                    <td>{{ student.bed.bed_number }}</td>
+                </tr>
+
+                <tr>
+                    <th>Food Type</th>
+                    <td>{{ student.food_type }}</td>
+                </tr>
+
+                <tr>
+                    <th>Deposit</th>
+                    <td>₹ {{ student.deposit }}</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>{{ student.status }}</td>
+                </tr>
+
+            </table>
+
+            <a href="{% url 'student_list' %}" class="btn btn-secondary">
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

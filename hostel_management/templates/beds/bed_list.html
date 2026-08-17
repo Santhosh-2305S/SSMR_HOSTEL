@@ -1,0 +1,596 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="row mb-4 align-items-center">
+
+    <div class="col-lg-6">
+
+        <h2 class="fw-bold">
+
+            <i class="bi bi-bed-fill text-primary"></i>
+
+            Bed Management
+
+        </h2>
+
+    </div>
+
+    <div class="col-lg-6 text-end">
+
+        <a href="{% url 'bed_report_pdf' %}"
+           class="btn btn-danger">
+
+            <i class="bi bi-file-earmark-pdf"></i>
+
+            PDF
+
+        </a>
+
+        <a href="{% url 'bed_report_excel' %}"
+           class="btn btn-success">
+
+            <i class="bi bi-file-earmark-excel"></i>
+
+            Excel
+
+        </a>
+
+        <a href="{% url 'bed_report_print' %}"
+           target="_blank"
+           class="btn btn-primary">
+
+            <i class="bi bi-printer"></i>
+
+            Print
+
+        </a>
+
+    </div>
+
+</div>
+
+    <div class="row mb-4">
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-primary text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-grid-3x3-gap-fill display-5"></i>
+
+                <h6 class="mt-2">
+
+                    Total Beds
+
+                </h6>
+
+                <h3>
+
+                    {{ total_beds }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-success text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-door-open-fill display-5"></i>
+
+                <h6 class="mt-2">
+
+                    Vacant Beds
+
+                </h6>
+
+                <h3>
+
+                    {{ vacant_beds }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-warning text-dark shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-person-fill-lock display-5"></i>
+
+                <h6 class="mt-2">
+
+                    Occupied Beds
+
+                </h6>
+
+                <h3>
+
+                    {{ occupied_beds }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+
+        <div class="card bg-info text-white shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-house-door-fill display-5"></i>
+
+                <h6 class="mt-2">
+
+                    Total Rooms
+
+                </h6>
+
+                <h3>
+
+                    {{ total_rooms }}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Search & Filters -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-funnel-fill"></i>
+
+            Bed Filters
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row g-3">
+
+                <div class="col-lg-4">
+
+                    <label class="form-label">
+
+                        Search Bed
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Enter Bed Number..."
+                        value="{{ search }}">
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+
+                        Room
+
+                    </label>
+
+                    <select
+                        name="room"
+                        class="form-select">
+
+                        <option value="">
+
+                            All Rooms
+
+                        </option>
+
+                        {% for room in rooms %}
+
+                        <option
+                            value="{{ room.id }}"
+                            {% if selected_room == room.id|stringformat:"s" %}selected{% endif %}>
+
+                            {{ room.room_number }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+
+                        Status
+
+                    </label>
+
+                    <select
+                        name="status"
+                        class="form-select">
+
+                        <option value="">
+
+                            All
+
+                        </option>
+
+                        <option
+                            value="Vacant"
+                            {% if selected_status == "Vacant" %}selected{% endif %}>
+
+                            Vacant
+
+                        </option>
+
+                        <option
+                            value="Occupied"
+                            {% if selected_status == "Occupied" %}selected{% endif %}>
+
+                            Occupied
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-lg-2 d-flex align-items-end">
+
+                    <button
+                        class="btn btn-primary w-100">
+
+                        <i class="bi bi-search"></i>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="mt-3">
+
+                <a href="{% url 'bed_list' %}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-clockwise"></i>
+
+                    Reset Filters
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h6 class="mb-0">
+
+        Total Records :
+        <strong>{{ beds.paginator.count }}</strong>
+
+    </h6>
+
+</div>
+
+    <!-- Bed Table -->
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+    <th>#</th>
+
+    <th>Room</th>
+
+    <th>Bed</th>
+
+    <th>Assigned Student</th>
+
+    <th>Status</th>
+
+    <th width="120">
+
+        Action
+
+    </th>
+
+</tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for bed in beds %}
+
+<tr>
+
+    <td>{{ forloop.counter }}</td>
+
+    <td>
+
+        <span class="badge bg-primary">
+
+            {{ bed.room.room_number }}
+
+        </span>
+
+    </td>
+
+    <td>
+
+        <strong>{{ bed.bed_number }}</strong>
+
+    </td>
+
+    <td>
+
+        {% with student=bed.student_set.first %}
+
+            {% if student %}
+
+                <span class="fw-bold">
+
+                    {{ student.name }}
+
+                </span>
+
+            {% else %}
+
+                <span class="text-muted">
+
+                    Not Assigned
+
+                </span>
+
+            {% endif %}
+
+        {% endwith %}
+
+    </td>
+
+    <td>
+
+    <span class="badge bg-{{ bed.status_color }}">
+
+        {{ bed.status }}
+
+    </span>
+
+</td>
+
+    <td>
+
+        <div class="dropdown">
+
+            <button
+                class="btn btn-outline-secondary btn-sm"
+                data-bs-toggle="dropdown">
+
+                <i class="bi bi-three-dots-vertical"></i>
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+
+                <li>
+
+                    <a class="dropdown-item"
+                       href="#">
+
+                        <i class="bi bi-eye me-2 text-primary"></i>
+
+                        View
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </td>
+
+</tr>
+--
+{% empty %}
+
+<tr>
+
+    <td colspan="6" class="text-center py-4 text-danger">
+
+        <i class="bi bi-exclamation-circle"></i>
+
+        No Beds Found
+
+    </td>
+
+</tr>
+
+{% endfor %}-
+
+                    </tbody>
+
+                </table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Summary Cards -->
+
+<div class="row mt-4">
+
+    <div class="col-lg-4">
+
+        <div class="alert alert-success text-center shadow-sm">
+
+            <h5>
+
+                Vacant Beds
+
+            </h5>
+
+            <h2>
+
+                {{ vacant_beds }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="alert alert-warning text-center shadow-sm">
+
+            <h5>
+
+                Occupied Beds
+
+            </h5>
+
+            <h2>
+
+                {{ occupied_beds }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="alert alert-primary text-center shadow-sm">
+
+            <h5>
+
+                Total Beds
+
+            </h5>
+
+            <h2>
+
+                {{ total_beds }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% if beds.has_other_pages %}
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+        {% if beds.has_previous %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ beds.previous_page_number }}&search={{ search }}&room={{ selected_room }}&status={{ selected_status }}">
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+        <li class="page-item active">
+
+            <span class="page-link">
+
+                {{ beds.number }}
+
+                /
+
+                {{ beds.paginator.num_pages }}
+
+            </span>
+
+        </li>
+
+        {% if beds.has_next %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ beds.next_page_number }}&search={{ search }}&room={{ selected_room }}&status={{ selected_status }}">
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+{% endblock %}
